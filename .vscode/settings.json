@@ -1,0 +1,31 @@
+{
+  "sqltools.connections": [
+    {
+      "mssqlOptions": {
+        "appName": "SQLTools",
+        "useUTC": true,
+        "encrypt": true
+      },
+      "previewLimit": 50,
+      "server": "NLIT-EPULIDO21",
+      "port": 1433,
+      "askForPassword": true,
+      "driver": "MSSQL",
+      "name": "NLIT-EPULIDO21",
+      "database": "ecn",
+      "username": "epulid"
+    },
+    {
+      "pgOptions": {
+        "ssl": {
+          "rejectUnauthorized": true
+        }
+      },
+      "previewLimit": 50,
+      "server": "localhost",
+      "driver": "PostgreSQL",
+      "name": "Render.com",
+      "connectString": "postgresql://cse340ep:uHNleP3PFTN5L9c4jcPtD7PITpLHK8gs@dpg-cu1cq1l2ng1s73eand3g-a.ohio-postgres.render.com/cse340ep"
+    }
+  ]
+}
