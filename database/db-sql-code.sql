@@ -46,3 +46,28 @@ CREATE TABLE IF NOT EXISTS public.account
     account_type account_type NOT NULL DEFAULT 'Client'::account_type,
     CONSTRAINT account_pkey PRIMARY KEY (account_id)
 );
+
+-- Data for table `classification`
+INSERT INTO public.classification (classification_name)
+VALUES ('Custom'),
+	('Sport'),
+	('SUV'),
+	('Truck'),
+	('Sedan');
+
+-- Query 4
+-- Table `inventory`
+-- Update inv_description with `a huge interior` where `smal interiors`
+-- Update the records for Make = 'GM' and Model = 'Hummer'
+UPDATE public.inventory
+SET inv_description = REPLACE(inv_description, 'small interiors', 'a huge interior')
+WHERE inv_make = 'GM' AND inv_model ='Hummer';
+
+-- Query 6
+-- Update the `Inventory` table
+-- Fields: inv_image and inv_thumbnail
+-- Value: '/images/' with '/images/vehicles/'
+UPDATE public.inventory
+SET 
+    inv_image = REPLACE(inv_image, '/images/', '/images/vehicles/'),
+    inv_thumbnail = REPLACE(inv_thumbnail, '/images/', '/images/vehicles/');
