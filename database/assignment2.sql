@@ -1,6 +1,15 @@
 -- ASSIGNMENT 2 
 -- TASK 1
 
+
+-- Insert data to clsaasification table
+INSERT INTO public.classification (classification_name)
+VALUES ('Custom'),
+   ('Sport'),
+   ('SUV'),
+   ('Truck'),
+   ('Sedan');
+
 -- Query 1
 -- Insert a new record to the `account` table
 -- account_id is auto generated

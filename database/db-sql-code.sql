@@ -2,7 +2,7 @@ CREATE TYPE public.account_type AS ENUM
     ('Client', 'Employee', 'Admin');
 
 ALTER TYPE public.account_type
-    OWNER TO cse340ep;
+    OWNER TO cse345ep;
 
 -- Table structure for table `Classification`
 CREATE TABLE public.classification (
@@ -27,6 +27,15 @@ CREATE TABLE IF NOT EXISTS public.inventory
  classification_id integer NOT NULL,
  CONSTRAINT inventory_pkey PRIMARY KEY (inv_id)
 );
+
+-- Insert data to clsaasification table
+INSERT INTO public.classification (classification_name)
+VALUES ('Custom'),
+   ('Sport'),
+   ('SUV'),
+   ('Truck'),
+   ('Sedan');
+   
 
 -- Data for table `inventory`
 
@@ -229,13 +238,7 @@ CREATE TABLE IF NOT EXISTS public.account
     CONSTRAINT account_pkey PRIMARY KEY (account_id)
 );
 
--- Data for table `classification`
-INSERT INTO public.classification (classification_name)
-VALUES ('Custom'),
-	('Sport'),
-	('SUV'),
-	('Truck'),
-	('Sedan');
+
 
 -- Query 4
 -- Table `inventory`
