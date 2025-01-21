@@ -39,11 +39,12 @@
 
 body {
   font-family: Arial, sans-serif;
+  background-color: #f4f4f9; 
   margin: 0;
   padding: 0;
   background: url('/images/site/checkerboard.jpg') no-repeat center center fixed;
   background-size: cover;
-  color: #fff;
+  color: #333;
 }
 
 header {
@@ -221,4 +222,77 @@ footer {
 *:before,
 *:after {
   box-sizing: border-box;
+}
+
+/* Styling during week 3 */
+/* Styling for the vehicle grid container */
+#inv-display {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 16px;
+  list-style: none;
+  padding: 0;
+  margin: 20px auto;
+  max-width: 1200px;
+}
+
+/* Styling for each grid item */
+#inv-display li {
+  background-color: #f9f9f9;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+#inv-display li:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* Styling for images */
+#inv-display li img {
+  width: 100%;
+  height: auto;
+  display: block;
+  border-bottom: 1px solid #ddd;
+}
+
+/* Styling for the name and price container */
+#inv-display li .namePrice {
+  padding: 16px;
+  text-align: center;
+}
+
+#inv-display li .namePrice h2 {
+  font-size: 1.2rem;
+  margin: 8px 0;
+  color: #333;
+}
+
+#inv-display li .namePrice h2 a {
+  text-decoration: none;
+  color: #007BFF;
+  transition: color 0.3s ease;
+}
+
+#inv-display li .namePrice h2 a:hover {
+  color: #0056b3;
+}
+
+#inv-display li .namePrice span {
+  display: block;
+  margin-top: 8px;
+  font-size: 1.1rem;
+  color: #28a745;
+  font-weight: bold;
+}
+
+/* Notice message styling */
+.notice {
+  font-size: 1.1rem;
+  color: #ff6b6b;
+  text-align: center;
+  margin: 20px 0;
 }
