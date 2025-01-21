@@ -91,7 +91,7 @@ nav ul {
 }
 
 h1 {
-  background-color: lightblue; /* Sets the background color of the <h1> element */
+  background-color: rgb(199, 225, 233); /* Sets the background color of the <h1> element */
   color: black; /* Optional: Sets the text color for contrast */
   padding: 10px; /* Optional: Adds padding inside the <h1> for better spacing */
   border-radius: 5px; /* Optional: Rounds the corners of the background */
