@@ -58,7 +58,7 @@ header {
 
 header nav {
   width:100%;
-  background-color:black;
+  background-color: rgba(0, 0, 0, 0.8);
   background-image:none;
   color:white;
   padding: 10px 0;
@@ -70,13 +70,16 @@ header nav {
 }
 
 header nav a {
-  color: black;
+  color: white;
   text-decoration: none;
   margin: 0 10px;
+  transition: color 0.3s ease, background-color 0.3s ease;
+  background-color: rgba(255, 255, 255, 0.2);
+  font-weight: bold;
 }
 
 nav ul {
-  background-color:black;
+  background-color:rgb(220, 217, 217);
   list-style-type: none; 
   padding: 0; 
   margin: 0; 
@@ -84,7 +87,16 @@ nav ul {
   justify-content: center;
   gap: 40px; 
   font-size: 1.2em;
+  
 }
+
+h1 {
+  background-color: lightblue; /* Sets the background color of the <h1> element */
+  color: black; /* Optional: Sets the text color for contrast */
+  padding: 10px; /* Optional: Adds padding inside the <h1> for better spacing */
+  border-radius: 5px; /* Optional: Rounds the corners of the background */
+}
+
 
 .container {
   max-width: 1200px;
