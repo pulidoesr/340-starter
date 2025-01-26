@@ -30,10 +30,10 @@ app.use(static)
 app.get("/", utilities.handleErrors(baseController.buildHome)) 
 
 // Inventory routes
-app.use("/inv", inventoryRoute)
+app.use("/", inventoryRoute)
 
 // File Not Found Route - must be last route in list
- app.use(async (req, res, next) => {
+/ app.use(async (req, res, next) => {
    next({status: 404, message: 'Sorry, we appear to have lost that page.'})
  })
 
@@ -65,3 +65,10 @@ const host = process.env.HOST
 app.listen(port, () => {
   console.log(`app listening on ${host}:${port}`)
 })
+
+
+app.all("*", (req, res) => {
+  console.log("Unhandled route:", req.method, req.url);
+  res.status(404).send("Route not found.");
+});
+

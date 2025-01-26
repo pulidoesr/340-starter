@@ -308,3 +308,48 @@ footer {
   text-align: center;
   margin: 20px 0;
 }
+
+/* Week 3 Car Detail */
+
+.car-detail-container {
+  max-width: 800px; /* Limit the width of the container */
+  margin: 50px auto; /* Center the container on the page */
+  padding: 20px;
+  background-color: #f9f9f9; /* Add a light background to the content */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Add a subtle shadow */
+  border-radius: 8px; /* Add rounded corners */
+}
+
+.car-detail-container h1 {
+  font-size: 2em;
+  margin-bottom: 20px;
+  text-align: center; /* Center the title */
+  color: #222; /* Use a darker color for emphasis */
+}
+
+.car-detail-container .price {
+  font-size: 1.5em;
+  margin-bottom: 20px;
+  text-align: center; /* Center the price */
+  color: #444;
+}
+
+.car-detail-container img {
+  display: block;
+  margin: 0 auto; /* Center the image */
+  max-width: 100%; /* Ensure the image doesn't exceed container width */
+  border-radius: 8px; /* Add rounded corners to the image */
+}
+
+.car-detail-container .car-details {
+  margin-top: 20px;
+}
+
+.car-detail-container .car-details p {
+  margin: 10px 0;
+  line-height: 1.6; /* Improve readability with proper line height */
+}
+
+.car-detail-container .car-details p strong {
+  color: #222; /* Highlight the labels */
+}

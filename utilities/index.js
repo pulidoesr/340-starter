@@ -35,7 +35,7 @@ Util.buildClassificationGrid = async function(data){
       grid += '<li>'
       grid +=  '<a href="../../inv/detail/'+ vehicle.inv_id 
       + '" title="View ' + vehicle.inv_make + ' '+ vehicle.inv_model 
-      + 'details"><img src="' + vehicle.inv_thumbnail 
+      + 'details"><img src="' + vehicle.inv_image 
       +'" alt="Image of '+ vehicle.inv_make + ' ' + vehicle.inv_model 
       +' on CSE Motors" /></a>'
       grid += '<div class="namePrice">'
@@ -56,6 +56,27 @@ Util.buildClassificationGrid = async function(data){
   }
   return grid
 }
+
+/* ****************************************
+ * Build the car detail page HTML
+ * ************************************ */
+Util.buildCarDetailPage = async function(carData) {
+  if(carData && Object.keys(carData).length > 0){
+    let detailPage = "<div class=\"car-detail-container\">";
+    detailPage += `<h1>${carData.inv_year} ${carData.inv_make} ${carData.inv_model}</h1>`;
+    detailPage += `<p class=\"price\">Price: $${new Intl.NumberFormat('en-US').format(carData.inv_price)}</p>`;
+    detailPage += `<img src=\"${carData.inv_image}\" alt=\"Image of ${carData.inv_make} ${carData.inv_model}\" class=\"car-image\">`;
+    detailPage += '<div class=\"car-details\">';
+    detailPage += `<p><strong>Mileage:</strong> ${new Intl.NumberFormat('en-US').format(carData.inv_miles)} miles</p>`;
+    detailPage += `<p><strong>Color:</strong> ${carData.inv_color}</p>`;
+    detailPage += `<p><strong>Description:</strong> ${carData.inv_description}</p>`;
+    detailPage += '</div>';
+    detailPage += '</div>';
+    return detailPage;
+    }
+     // Return a default message if carData is missing or invalid
+  return "<p>Car details are not available.</p>";
+};
 
 /* ****************************************
  * Middleware For Handling Errors
