@@ -1,3 +1,4 @@
+const path = require('path')
 const invModel = require("../models/inventory-model")
 const Util = {}
 
@@ -77,6 +78,49 @@ Util.buildCarDetailPage = async function(carData) {
      // Return a default message if carData is missing or invalid
   return "<p>Car details are not available.</p>";
 };
+
+/* ****************************************
+ * Build the login page HTML
+ * ************************************ */
+Util.buildLoginPage = function() {
+  let loginPage = "<div class=\"login-container\">";
+  loginPage += "<div class=\"login-box\">";
+  
+  // Email Input
+  loginPage += "<label for=\"email\">Email Address:</label>";
+  loginPage += "<input type=\"email\" id=\"email\" name=\"email\" required>";
+
+  // Password Input
+  loginPage += "<label for=\"password\">Password:</label>";
+  loginPage += "<input type=\"password\" id=\"password\" name=\"password\" required>";
+  
+  // Password Policy Info
+  loginPage += "<p class=\"password-info\">Passwords must be minimum of 12 characters and include 1 capital letter, 1 number, and 1 special character.</p>";
+  
+  // Show Password Button
+  loginPage += "<button type=\"button\" id=\"show-password\" onclick=\"togglePassword()\">Show Password</button>";
+
+  // Login Button
+  loginPage += "<button type=\"submit\" id=\"login-btn\">Login</button>";
+
+  // Sign-up Link
+  loginPage += "<p>No account? <a href=\"/signup\">Sign-up</a></p>";
+
+  loginPage += "</div>"; // Close login-box
+  loginPage += "</div>"; // Close login-container
+
+  return loginPage;
+};
+
+// JavaScript to Toggle Password Visibility
+function togglePassword() {
+  let passwordInput = document.getElementById("password");
+  if (passwordInput.type === "password") {
+      passwordInput.type = "text";
+  } else {
+      passwordInput.type = "password";
+  }
+}
 
 /* ****************************************
  * Middleware For Handling Errors

@@ -35,6 +35,15 @@
   }
 }
 
+/* Ensure the body and html take full height */
+html, body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
  /* Content Design */
 
 body {
@@ -352,4 +361,125 @@ footer {
 
 .car-detail-container .car-details p strong {
   color: #222; /* Highlight the labels */
+}
+
+.login-page {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+}
+
+.login-container {
+  background-color: #2c3e50; /* Dark blue container */
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+  width: 350px;
+  text-align: center;
+}
+
+.login-form label {
+  display: block;
+  color: white;
+  text-align: left;
+  font-weight: bold;
+  margin: 10px 0 5px;
+}
+
+.login-form input {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  margin-bottom: 15px;
+  font-size: 16px;
+}
+
+.login-btn {
+  width: 100%;
+  padding: 10px;
+  background-color: #ecf0f1; /* Light gray button */
+  color: #2c3e50;
+  border: none;
+  border-radius: 20px;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.login-btn:hover {
+  background-color: #bdc3c7;
+}
+
+.signup-link {
+  margin-top: 15px;
+  color: white;
+  font-size: 16px;
+}
+
+.signup-link a {
+  color: #ffffff;
+  font-weight: bold;
+  text-decoration: underline;
+}
+
+.signup-link a:hover {
+  text-decoration: none;
+}
+
+/* Make the container fill the entire screen */
+.login-container {
+  display: flex;
+  justify-content: center; /* Centers horizontally */
+  align-items: center; /* Centers vertically */
+  min-height: calc(100vh - 100px); /* Adjust height dynamically based on header & footer */
+  width: 100%;
+  background: rgba(0, 0, 0, 0.8); /* Dark overlay background */
+  margin-top: 1px; /* Push down to avoid overlapping header */
+  margin-bottom: 1px; /* Space above footer */
+}
+/* Style the login box */
+.login-box {
+  background: #1e293b; /* Dark blue-gray */
+  padding: 20px;
+  border-radius: 10px;
+  width: 350px;
+  text-align: center;
+  color: white;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.5);
+}
+
+/* Title styling */
+.login-box h1 {
+  background: #bde0fe; /* Light blue */
+  color: black;
+  padding: 10px;
+  border-radius: 5px;
+}
+
+/* Input fields */
+.login-box input {
+  width: 90%;
+  padding: 10px;
+  margin: 10px 0;
+  border: none;
+  border-radius: 5px;
+}
+
+/* Buttons */
+.login-box button {
+  background: #ffffff;
+  color: black;
+  padding: 10px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  margin: 5px;
+}
+
+/* Signup link */
+.login-box a {
+  color: #3b82f6; /* Blue link */
+  font-weight: bold;
 }
