@@ -96,9 +96,6 @@ Util.buildLoginPage = function() {
   
   // Password Policy Info
   loginPage += "<p class=\"password-info\">Passwords must be minimum of 12 characters and include 1 capital letter, 1 number, and 1 special character.</p>";
-  
-  // Show Password Button
-  loginPage += "<button type=\"button\" id=\"show-password\" onclick=\"togglePassword()\">Show Password</button>";
 
   // Login Button
   loginPage += "<button type=\"submit\" id=\"login-btn\">Login</button>";
@@ -112,15 +109,7 @@ Util.buildLoginPage = function() {
   return loginPage;
 };
 
-// JavaScript to Toggle Password Visibility
-function togglePassword() {
-  let passwordInput = document.getElementById("password");
-  if (passwordInput.type === "password") {
-      passwordInput.type = "text";
-  } else {
-      passwordInput.type = "password";
-  }
-}
+
 
 /* ****************************************
  * Middleware For Handling Errors

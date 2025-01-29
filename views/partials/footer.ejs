@@ -1,5 +1,29 @@
-<% const d = new Date()
-let year = d.getFullYear() %>
+<% 
+const d = new Date();
+let year = d.getFullYear();
+%>
 <footer>
   <p class="copyright">&copy; <%= year %>, CSE 340 App</p>
+  <p><a href="#" onclick="triggerError()">Trigger Error</a></p>
 </footer>
+
+<script>
+  function triggerError() {
+    try {
+      throw new Error("Test error generated from the footer link!");
+    } catch (error) {
+      console.error("Manually triggered error:", error);
+
+      fetch("/error-log", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          message: error.message,
+          stack: error.stack,
+        }),
+      });
+    }
+  }
+</script>

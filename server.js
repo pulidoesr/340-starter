@@ -59,6 +59,11 @@ app.use("/account", accountRoute)
 // Inventory routes
 app.use("/", inventoryRoute)
 
+// Basic error handling
+app.post("/error-log", (req, res) => {
+  console.error("Client-side error logged:", req.body);
+  res.status(200).json({ message: "Error logged successfully" });
+});
 
 
 // File Not Found Route - must be last route in list
