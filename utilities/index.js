@@ -109,19 +109,19 @@ Util.buildLoginPage = function() {
   return loginPage;
 };
 
-/* ****************************************
- * Build the login page HTML
- * ************************************ */
 Util.buildRegisterPage = function() {
   let registerPage = "<div class=\"register-container\">";
   registerPage += "<div class=\"register-box\">";
+
+  // Start Form
+  registerPage += "<form id=\"registerForm\" action=\"/account/register\" method=\"post\">";
 
   // Required Fields Notice
   registerPage += "<p class=\"required-fields\"><i>All fields are required.</i></p>";
 
   // First Name
   registerPage += "<label for=\"first-name\">First name:</label>";
-  registerPage += "<input type=\"text\" id=\"first-name\" name=\"account_firstname\" required>";
+  registerPage += "<input type=\"text\" id=\"account_firstname\" name=\"account_firstname\" required>";
 
   // Last Name
   registerPage += "<label for=\"last-name\">Last name:</label>";
@@ -129,23 +129,26 @@ Util.buildRegisterPage = function() {
 
   // Email
   registerPage += "<label for=\"email\">Email Address:</label>";
-  registerPage += "<input type=\"email\" id=\"email\" name=\"email\" required>";
+  registerPage += "<input type=\"email\" id=\"email\" name=\"account_email\" required>";
 
   // Password
   registerPage += "<label for=\"password\">Password:</label>";
-  registerPage += "<input type=\"password\" id=\"password\" name=\"password\" required>";
+  registerPage += "<input type=\"password\" id=\"password\" name=\"account_password\" required>";
 
   // Password Policy
   registerPage += "<p class=\"password-info\">Passwords must be a minimum of 12 characters and include 1 capital letter, 1 number, and 1 special character.</p>";
 
-
   // Register Button
   registerPage += "<button type=\"submit\" id=\"register-btn\">Register</button>";
+
+  // Close Form
+  registerPage += "</form>";
 
   registerPage += "</div>"; // Close register-box
   registerPage += "</div>"; // Close register-container
   return registerPage;
 };
+
 
 
 
