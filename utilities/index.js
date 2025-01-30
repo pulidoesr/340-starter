@@ -101,13 +101,53 @@ Util.buildLoginPage = function() {
   loginPage += "<button type=\"submit\" id=\"login-btn\">Login</button>";
 
   // Sign-up Link
-  loginPage += "<p>No account? <a href=\"/signup\">Sign-up</a></p>";
+  loginPage += "<p>No account? <a href=\"/account/register\">register</a></p>";
 
   loginPage += "</div>"; // Close login-box
   loginPage += "</div>"; // Close login-container
 
   return loginPage;
 };
+
+/* ****************************************
+ * Build the login page HTML
+ * ************************************ */
+Util.buildRegisterPage = function() {
+  let registerPage = "<div class=\"register-container\">";
+  registerPage += "<div class=\"register-box\">";
+
+  // Required Fields Notice
+  registerPage += "<p class=\"required-fields\"><i>All fields are required.</i></p>";
+
+  // First Name
+  registerPage += "<label for=\"first-name\">First name:</label>";
+  registerPage += "<input type=\"text\" id=\"first-name\" name=\"account_firstname\" required>";
+
+  // Last Name
+  registerPage += "<label for=\"last-name\">Last name:</label>";
+  registerPage += "<input type=\"text\" id=\"last-name\" name=\"account_lastname\" required>";
+
+  // Email
+  registerPage += "<label for=\"email\">Email Address:</label>";
+  registerPage += "<input type=\"email\" id=\"email\" name=\"email\" required>";
+
+  // Password
+  registerPage += "<label for=\"password\">Password:</label>";
+  registerPage += "<input type=\"password\" id=\"password\" name=\"password\" required>";
+
+  // Password Policy
+  registerPage += "<p class=\"password-info\">Passwords must be a minimum of 12 characters and include 1 capital letter, 1 number, and 1 special character.</p>";
+
+
+  // Register Button
+  registerPage += "<button type=\"submit\" id=\"register-btn\">Register</button>";
+
+  registerPage += "</div>"; // Close register-box
+  registerPage += "</div>"; // Close register-container
+  return registerPage;
+};
+
+
 
 
 
