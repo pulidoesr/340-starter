@@ -5,11 +5,16 @@ const pool = require("../database/")
 */
 async function registerAccount(account_firstname, account_lastname, account_email, account_password){
   try {
-    const sql = "INSERT INTO account (account_firstname, account_lastname, account_email, account_password, account_type) VALUES ($1, $2, $3, $4, 'Client') RETURNING *"
-    return await pool.query(sql, {account_firstname, account_lastname, account_email, account_password})
+    console.log("Attempting to insert:", account_firstname, account_lastname, account_email, account_password);
+    const sql = "INSERT INTO public.account (account_firstname, account_lastname, account_email, account_password, account_type) VALUES ($1, $2, $3, $4, 'Client') RETURNING *"
+    const values = [account_firstname, account_lastname, account_email, account_password]
+    const result = await pool.query(sql, values)
+    console.log("Insert result:", result.rows[0])
+    return result.rows[0]
   }
   catch (error){
-    return error.message
+    console.error("❌ Database error:", error.message); // Log the actual error message
+    return null;
   }
 }
 

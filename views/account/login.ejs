@@ -3,8 +3,8 @@
   <% } else {
     res.redirect('/')
   } %>
-
-<%# messages() %>
-
+  <div id="flash-message" class="flash-message">
+    <%- messages() %>
+  </div>
 
 <%- loginPage %>

@@ -5,6 +5,11 @@
   } %>
 
 <%# messages() %>
+<% if (messages.notice) { %>
+  <div class="alert alert-danger">
+    <%= messages.notice %>
+  </div>
+<% } %>
 
 
 <%- registerPage %>

@@ -88,11 +88,11 @@ Util.buildLoginPage = function() {
   
   // Email Input
   loginPage += "<label for=\"email\">Email Address:</label>";
-  loginPage += "<input type=\"email\" id=\"email\" name=\"email\" required>";
+  loginPage += "<input type=\"email\" id=\"email\" name=\"account_email\" required>";
 
   // Password Input
   loginPage += "<label for=\"password\">Password:</label>";
-  loginPage += "<input type=\"password\" id=\"password\" name=\"password\" required>";
+  loginPage += "<input type=\"password\" id=\"password\" name=\"account_password\" required>";
   
   // Password Policy Info
   loginPage += "<p class=\"password-info\">Passwords must be minimum of 12 characters and include 1 capital letter, 1 number, and 1 special character.</p>";
@@ -114,7 +114,7 @@ Util.buildRegisterPage = function() {
   registerPage += "<div class=\"register-box\">";
 
   // Start Form
-  registerPage += "<form id=\"registerForm\" action=\"/account/register\" method=\"post\">";
+  registerPage += "<form id=\"registerForm\" action=\"/account/register\" method=\"POST\">";
 
   // Required Fields Notice
   registerPage += "<p class=\"required-fields\"><i>All fields are required.</i></p>";
