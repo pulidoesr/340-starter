@@ -32,32 +32,31 @@ account.buildRegister = async function (req, res, next) {
 }
 
 account.buildRegisterAccount = async function (req, res) {
-  let nav = await utilities.getNav()
-  const loginPage = await utilities.buildLoginPage()
-  const {
+  try {
+    const {
       account_firstname,
       account_lastname,
       account_email,
       account_password,
-  } = req.body
-  
-  const regResult = await accountModel.registerAccount (
-    account_firstname,
-    account_lastname,
-    account_email,
-    account_password,
-  )
-  if (regResult) {
-    const message = `Congratulations, you're registered ${account_firstname}, Please log in.`;
-    req.flash("notice", message)
-    return res.status(201).redirect("./login")
-} else {
-  req.flash("notice", "Sorry, the registration failed.")
-  res.status(501).render("account/register", {
-    title: "Registration",
-    nav,
-    errors:null,
-  })
+    } = req.body;
+
+    const regResult = await accountModel.registerAccount(
+      account_firstname,
+      account_lastname,
+      account_email,
+      account_password
+    );
+
+    if (regResult) {
+      req.flash("notice", `Congratulations, you're registered ${account_firstname}, Please log in.`);
+      return res.status(201).redirect("./login");
+    } else {
+      req.flash("notice", "Sorry, the registration failed.");
+    }
+  } catch (error) {
+    console.error("Registration Error:", error);   
+  }
 }
-}
+
+
 module.exports = account 
