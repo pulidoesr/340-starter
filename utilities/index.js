@@ -109,45 +109,38 @@ Util.buildLoginPage = function() {
   return loginPage;
 };
 
-Util.buildRegisterPage = function() {
-  let registerPage = "<div class=\"register-container\">";
-  registerPage += "<div class=\"register-box\">";
+Util.buildRegisterPage = function (account_firstname = "", account_lastname = "", account_email = "") {
+  return `
+    <div class="register-container">
+      <div class="register-box">
+        <form id="registerForm" action="/account/register" method="POST">
+          <p class="required-fields"><i>All fields are required.</i></p>
 
- // Start Form
-registerPage += "<form id=\"registerForm\" action=\"/account/register\" method=\"POST\">";
+          <label for="account_firstname">First name:</label>
+          <input type="text" id="account_firstname" name="account_firstname" required value="${account_firstname}">
 
-// Required Fields Notice
-registerPage += "<p class=\"required-fields\"><i>All fields are required.</i></p>";
+          <label for="account_lastname">Last name:</label>
+          <input type="text" id="account_lastname" name="account_lastname" required value="${account_lastname}">
 
-// First Name
-registerPage += "<label for=\"account_firstname\">First name:</label>";
-registerPage += "<input type=\"text\" id=\"account_firstname\" name=\"account_firstname\" required>";
+          <label for="account_email">Email Address:</label>
+          <input type="email" id="account_email" name="account_email" required value="${account_email}" 
+          pattern="^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$" 
+          title="Please enter a valid email address">
 
-// Last Name
-registerPage += "<label for=\"account_lastname\">Last name:</label>";
-registerPage += "<input type=\"text\" id=\"account_lastname\" name=\"account_lastname\" required>";
+          <label for="account_password">Password:</label>
+          <input type="password" id="account_password" name="account_password" required 
+          pattern="^(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{12,}$" 
+          title="Password must be at least 12 characters long and include at least one uppercase letter, one number, and one special character">
 
-// Email
-registerPage += "<label for=\"account_email\">Email Address:</label>";
-registerPage += "<input type=\"email\" id=\"account_email\" name=\"account_email\" required pattern=\"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$\" title=\"Please enter a valid email address\">";
+          <p class="password-info">Passwords must be a minimum of 12 characters and include 1 capital letter, 1 number, and 1 special character.</p>
 
-// Password
-registerPage += "<label for=\"account_password\">Password:</label>";
-registerPage += "<input type=\"password\" id=\"account_password\" name=\"account_password\" required pattern=\"^(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{12,}$\" title=\"Password must be at least 12 characters long and include at least one uppercase letter, one number, and one special character\">";
-
-// Password Policy
-registerPage += "<p class=\"password-info\">Passwords must be a minimum of 12 characters and include 1 capital letter, 1 number, and 1 special character.</p>";
-
-// Register Button
-registerPage += "<button type=\"submit\" id=\"register-btn\">Register</button>";
-
-// Close Form
-registerPage += "</form>";
-
-registerPage += "</div>"; // Close register-box
-registerPage += "</div>"; // Close register-container
-return registerPage;
+          <button type="submit" id="register-btn">Register</button>
+        </form>
+      </div>
+    </div>
+  `;
 };
+
 
 
 
