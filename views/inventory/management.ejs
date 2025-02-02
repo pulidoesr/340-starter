@@ -1,0 +1,18 @@
+<div class="inventory-management">
+<% if (title) { %>
+  <h1><%= title %></h1>
+<% } else { %>
+  <% res.redirect('/') %>
+<% } %>
+
+
+<% if (flashMessage) { %>
+    <p class="flash-message"><%= flashMessage %></p>
+<% } %>
+
+<ul>
+    <li><a href="/inv/add-classification">Add New Classification</a></li>
+    <li><a href="/inv/add-vehicle">Add New Vehicle</a></li>
+</ul>
+
+</div>

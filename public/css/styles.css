@@ -587,3 +587,53 @@ button:hover {
   display: none;
 }
 
+/* Apply styles only to the Inventory Management template */
+.inventory-management {
+  width: 60%;
+  margin: 50px auto;
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+  text-align: center;
+}
+
+/* Title Styling */
+.inventory-management h1 {
+  font-size: 28px;
+  color: #222;
+  margin-bottom: 20px;
+}
+
+/* Flash Message */
+.inventory-management .flash-message {
+  color: red;
+  font-weight: bold;
+  background: #ffe5e5;
+  padding: 10px;
+  border: 1px solid red;
+  border-radius: 5px;
+  margin-bottom: 15px;
+}
+
+/* Styled List */
+.inventory-management ul {
+  list-style: none;
+  padding: 0;
+}
+
+.inventory-management ul li {
+  margin: 10px 0;
+}
+
+.inventory-management ul li a {
+  text-decoration: none;
+  font-size: 18px;
+  color: #0066cc;
+  font-weight: bold;
+}
+
+.inventory-management ul li a:hover {
+  text-decoration: underline;
+}
+
