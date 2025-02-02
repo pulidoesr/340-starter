@@ -141,7 +141,21 @@ Util.buildRegisterPage = function (account_firstname = "", account_lastname = ""
   `;
 };
 
+Util.addClassification = function (classification_name = "") {
+   const addClassification =  `
+      <div class="classification-box">
+        <form id="classificationForm" action="/inv/add-classification" method="POST">
+          <p class="required-fields"><i>New classification name cannot contain a space or special character of any kind</i></p>
 
+          <label for="classification_name">Classification name:</label>
+          <input type="text" id="classification_name" name="classification_name" required value="${classification_name}"
+          pattern="^[a-zA-Z0-9]+$" title="Only letters and numbers are allowed. No spaces or special characters.">
+          <button type="submit" id="register-btn">Register</button>
+        </form>
+      </div>
+  `
+  return addClassification
+};
 
 
 /* ****************************************
