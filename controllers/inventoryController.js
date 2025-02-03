@@ -114,13 +114,6 @@ invMgm.addInventory = async function (req, res)  {
             inv_miles, inv_color
         } = req.body;
 
-        // Ensure required fields are not empty
-        if (!classification_id || !inv_make || !inv_model || !inv_year || !inv_price) {
-            console.error("❌ Missing required fields");
-            throw new Error("Missing required fields.");
-        }
-        console.log("📌 Received Inventory Data:", req.body);
-
         // ✅ Properly await the database insertion
         const regResult = await inventoryModel.registerNewInventory(
             classification_id, inv_make, inv_model, inv_year,

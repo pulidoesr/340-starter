@@ -1,42 +1,60 @@
-const utilities = require(".")
-const { body, validationResult } = require("express-validator")
-const validate = {}
+const utilities = require(".");
+const { body, validationResult } = require("express-validator");
+const validate = {};
 
 /*
-  Registration Data Validation Rules
+  Inventory Data Validation Rules
 */
 validate.inventoryRules = () => {
   return [
-    body("classification_name")
+    body("inv_make")
       .trim()
-      .isLength({ min: 1 })
-      .withMessage("Please provide a classification name.")
-      .custom((value) => {
-        if (!/^[a-zA-Z0-9]+$/.test(value)) {
-          throw new Error("Only letters and numbers are allowed. No spaces or special characters.");
-        }
-        return true;
-      }) // ✅ Proper way to enforce alphanumeric without `.matches()`
+      .isLength({ min: 2 })
+      .withMessage("Make must be at least 2 characters long."),
+    
+    body("inv_model")
+      .trim()
+      .isLength({ min: 2 })
+      .withMessage("Model must be at least 2 characters long."),
+    
+    body("inv_year")
+      .isInt({ min: 1900, max: new Date().getFullYear() + 1 })
+      .withMessage("Please enter a valid year."),
+    
+    body("inv_description")
+      .trim()
+      .isLength({ min: 10 })
+      .withMessage("Description must be at least 10 characters long."),
+    
+    body("inv_price")
+      .isFloat({ min: 0 })
+      .withMessage("Price must be a positive number."),
+    
+    body("inv_miles")
+      .isInt({ min: 0 })
+      .withMessage("Miles must be a non-negative integer."),
+    
+    body("inv_color")
+      .trim()
+      .matches(/^[a-zA-Z]+$/)
+      .withMessage("Color must contain only letters."),
   ];
 };
 
-
-validate.checkClasData = async (req, res, next) => { 
-
-  const { classification_name } = req.body;
+validate.checkInvData = async (req, res, next) => { 
   let errors = validationResult(req);
 
   if (!errors.isEmpty()) {
     let nav = await utilities.getNav();
-    let addInventory = await utilities.addInventory(classification_name || ""); 
-    return res.render("inventory/add-classification", {  
+    let addInventory = await utilities.addInventoryForm(req.body.inv_make || ""); 
+    return res.render("inventory/add-inventory", {  
       errors: errors.array(),
       title: "Add New Inventory",
       nav,
-      addInventory
+      addInventory,
     });
   }
-  next(); // ✅ Ensure request moves to `processClassification`
+  next();
 };
 
 module.exports = validate;

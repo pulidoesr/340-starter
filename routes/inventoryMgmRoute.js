@@ -2,6 +2,7 @@ const express = require("express")
 const router = express.Router()
 const invMgm = require("../controllers/inventoryController");
 const regValidate = require("../utilities/classification-validation")
+const invValidate= require("../utilities/inventory-validation")
 
 
 // Process routes (MVC approach)
@@ -22,6 +23,10 @@ router.post(
 router.get("/add-vehicle", invMgm.addInventory);
 
 // Route to process form submission
-router.post("/add-inventory", invMgm.addInventory);
+router.post("/add-inventory", 
+  invValidate.inventoryRules(),
+  invValidate.checkInvData,
+  invMgm.processInventory
+);
 
 module.exports = router;
