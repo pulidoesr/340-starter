@@ -42,4 +42,35 @@ async function getCarDetailById(invId) {
   }
 }
 
-module.exports = {getClassifications, getInventoryByClassificationId, getCarDetailById};
+/* ***************************
+ *  insert a new Car
+ * ************************** */
+async function registerNewInventory(
+  classification_id, inv_make, inv_model, inv_year,
+  inv_description, inv_image, inv_thumbnail, inv_price,
+  inv_miles, inv_color
+) {
+  try {
+      const sql = `
+          INSERT INTO inventory (
+              classification_id, inv_make, inv_model, inv_year,
+              inv_description, inv_image, inv_thumbnail, inv_price,
+              inv_miles, inv_color
+          ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)
+          RETURNING inv_id;`;
+
+      const values = [
+          classification_id, inv_make, inv_model, inv_year,
+          inv_description, inv_image, inv_thumbnail, inv_price,
+          inv_miles, inv_color
+      ];
+
+      const result = await pool.query(sql, values);
+      return result.rowCount > 0; // Return `true` if insert was successful
+  } catch (error) {
+      console.error("Database insert error:", error);
+      return false;
+  }
+}
+
+module.exports = {getClassifications, getInventoryByClassificationId, getCarDetailById, registerNewInventory}

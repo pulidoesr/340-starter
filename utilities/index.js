@@ -158,6 +158,64 @@ Util.addClassification = function (classification_name = "") {
 };
 
 
+Util.addInventoryForm = async function (classification_id, inv_make, inv_model, inv_year, inv_description, inv_image, inv_thumbnail, inv_price, inv_miles, inv_color) {
+  let classoptions = await invModel.getClassifications()
+  let classificationOptions = classoptions.rows.map(classification => `
+      <option value="${classification.classification_id}" ${classification.classification_id === classification_id ? "selected" : ""}>
+          ${classification.classification_name}
+      </option>
+  `).join("");
+
+  return `
+  <form action="/inv/add-inventory" method="POST" id="vehicleForm" onsubmit="console.log('form submitted')>
+      <!-- Classification Dropdown -->
+      <label for="classification_id">Classification:</label>
+      <select id="classification_id" name="classification_id" required>
+          ${classificationOptions}
+      </select>
+
+      <!-- Make -->
+      <label for="inv_make">Make:</label>
+      <input type="text" id="inv_make" name="inv_make" required value="${inv_make || ""}">
+
+      <!-- Model -->
+      <label for="inv_model">Model:</label>
+      <input type="text" id="inv_model" name="inv_model" required value="${inv_model || ""}">
+
+      <!-- Description -->
+      <label for="inv_description">Description:</label>
+      <textarea id="inv_description" name="inv_description" required>${inv_description || ""}</textarea>
+
+      <!-- Image Path -->
+      <label for="inv_image">Image Path:</label>
+      <input type="text" id="inv_image" name="inv_image" required value="${inv_image || "/images/vehicles/no-image.png"}">
+
+      <!-- Thumbnail Path -->
+      <label for="inv_thumbnail">Thumbnail Path:</label>
+      <input type="text" id="inv_thumbnail" name="inv_thumbnail" required value="${inv_thumbnail || "/images/vehicles/no-image.png"}">
+
+      <!-- Price (No Commas) -->
+      <label for="inv_price">Price:</label>
+      <input type="number" id="inv_price" name="inv_price" required value="${inv_price || ""}">
+
+      <!-- Year -->
+      <label for="inv_year">Year:</label>
+      <input type="number" id="inv_year" name="inv_year" required min="1900" max="2099" value="${inv_year || ""}">
+
+      <!-- Miles -->
+      <label for="inv_miles">Miles:</label>
+      <input type="number" id="inv_miles" name="inv_miles" required value="${inv_miles || ""}">
+
+      <!-- Color -->
+      <label for="inv_color">Color:</label>
+      <input type="text" id="inv_color" name="inv_color" required value="${inv_color || ""}">
+
+      <button type="submit" class="submit-btn">Add Vehicle</button>
+  </form>
+  `;
+};
+
+
 /* ****************************************
  * Middleware For Handling Errors
  * Wrap other function in this for 
