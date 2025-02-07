@@ -1,5 +1,7 @@
 const path = require('path')
 const invModel = require("../models/inventory-model")
+const jwt = require("jsonwebtoken")
+require("dotenv").config()
 const Util = {}
 
 /* ************************
@@ -86,6 +88,9 @@ Util.buildLoginPage = function() {
   let loginPage = "<div class=\"login-container\">";
   loginPage += "<div class=\"login-box\">";
   
+  // Login
+  loginPage += "<form id= \"loginForm\" action=\"/account/login\" method=\"POST\">";
+
   // Email Input
   loginPage += "<label for=\"email\">Email Address:</label>";
   loginPage += "<input type=\"email\" id=\"email\" name=\"account_email\" required>";
@@ -103,10 +108,31 @@ Util.buildLoginPage = function() {
   // Register Link
   loginPage += "<p>No account? <a href=\"/account/register\">register</a></p>";
 
+   // End form 
+   loginPage += "</form>";  
+
   loginPage += "</div>"; // Close login-box
   loginPage += "</div>"; // Close login-container
 
   return loginPage;
+};
+
+/* ****************************************
+ * Account View page HTML
+ * ************************************ */
+Util.accountView = function() {
+  let accountview = "<div class=\"accountview-container\">";
+  accountview += "<div class=\"accountview-box\">";
+  // Page content
+  accountview += "<h1>Account Management</h1>";
+  accountview += "<p><strong>Welcome New</strong></p>";
+  accountview += "<p>You're logged in.</p>";
+  accountview += "<a href='#' class='edit-account'>Edit Account Information</a>";
+
+  accountview += "</div>"; // Close accountlogin-box
+  accountview += "</div>"; // Close accountlogin-container
+
+  return accountview;
 };
 
 Util.buildRegisterPage = function (account_firstname = "", account_lastname = "", account_email = "") {
@@ -223,5 +249,37 @@ Util.addInventoryForm = async function (classification_id, inv_make, inv_model, 
  **************************************** */
 Util.handleErrors = fn => (req, res, next) => Promise.resolve(fn(req, res, next)).catch(next)
 
+/* 
+  Check Token
+*/
+Util.checkJWTToken = (req, res, next) => {
+  if (req.cookies.jwt) {
+    jwt.verify(
+      req.cookies.jwt, process.env.ACCESS_TOKEN_SECRET, function (err, accountData) {
+        if (err) {
+          req.flash("notice", "Please log in")
+          res.clearCookie("jwt")
+          return res.redirect("/account/login")
+        }
+        res.locals.accountData = accountData
+        res.locals.loggedin = 1
+        next()
+      })
+  } else {
+    next()
+  }
+}
+
+/*
+  Check Login
+*/
+Util.checkLogin = (req, res, next) => {
+  if (res.locals.loggedin) {
+    next()
+  } else {
+    req.flash("notice", "Please log in.")
+    return res.redirect("/account/login")
+  }
+}
 
 module.exports = Util

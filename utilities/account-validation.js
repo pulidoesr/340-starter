@@ -4,6 +4,24 @@ const { body, validationResult } = require("express-validator")
 const validate = {}
 
 /*
+  Login Data Validation Rules
+  */
+ validate.loginRules = () =>{
+  return [
+    body("account_email")  
+       .trim()
+       .isEmail()
+       .normalizeEmail() //refer to validator.js docs
+       .withMessage("A valid email is required.")
+       .custom(async (account_email) => {
+        const emailExists = await accountModel.checkExistingEmail(account_email)
+        if (!emailExists) {
+          throw new Error("Email does not exists.")
+        }
+       }),
+  ]
+ }
+/*
   Registration Data Validation Rules
 */
 validate.registrationRules = () => {
@@ -44,6 +62,24 @@ validate.registrationRules = () => {
        })
        .withMessage("Password does not meet requirements.")
   ]
+}
+
+validate.checkLoginData = async (req, resizeBy, next) => {
+  const { account_email} = req.body
+  let errors = []
+  errors = validationResult(req)
+  if (!errors.isEmpty()) {
+    let nav = await utilities.getNav()
+    let loginPage = await utilities.buildLoginPage(account_email)
+    resizeBy.render("account/login", {
+      errors,
+      title: "Login",
+      nav,
+      loginPage
+    })
+    return
+  }
+  next()
 }
 
 validate.checkRegData = async (req, resizeBy, next) => {

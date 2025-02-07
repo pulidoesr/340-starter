@@ -1,7 +1,10 @@
 
 const utilities = require('../utilities')
-const accountModel = require('../models/registration-model');
+const registrationModel = require('../models/registration-model')
+const accountModel = require('../models/account-model')
 const bcrypt = require("bcryptjs")
+const jwt = require("jsonwebtoken")
+require("dotenv").config()
 
 
 const account = {}
@@ -17,6 +20,7 @@ account.buildLogin = async function (req, res, next) {
     loginPage
   })
 }
+
 
 /*
   Deliver registration view
@@ -50,13 +54,14 @@ account.buildRegisterAccount = async function (req, res) {
       // regular password and cost (salt is generated automatically)
       hashedPassword = await bcrypt.hashSync(account_password,10)
     } catch (error) {
+      let nav = await utilities.getNav()
       req.flash("notice", "Sorry, there was an error processing the registration.")
       res.status(500).render("account/register", {
         title: "Registration",
         nav,
       })
     }
-    const regResult = await accountModel.registerAccount(
+    const regResult = await registrationModel.registerAccount(
       account_firstname,
       account_lastname,
       account_email,
@@ -74,5 +79,53 @@ account.buildRegisterAccount = async function (req, res) {
   }
 }
 
+/* 
+  Process login request
+  */
+
+
+  account.accountLogin = async function (req, res, next) {
+    try {
+      let nav = await utilities.getNav();
+      const { account_email, account_password } = req.body;
+      const accountData = await accountModel.getAccountByEmail(account_email);
+  
+      if (!accountData) {
+        req.flash("notice", "Invalid email or password.");
+        return res.status(400).render("account/login", { title: "Login", nav, errors: null, account_email });
+      }
+  
+      const isPasswordValid = await bcrypt.compare(account_password, accountData.account_password);
+      if (!isPasswordValid) {
+        req.flash("notice", "Invalid email or password.");
+        return res.status(400).render("account/login", { title: "Login", nav, errors: null, account_email });
+      }
+  
+      delete accountData.account_password; // Remove password before sending user data
+      const accessToken = jwt.sign(accountData, process.env.ACCESS_TOKEN_SECRET, { expiresIn: 3600 * 1000 });
+  
+      res.cookie("jwt", accessToken, { httpOnly: true, maxAge: 3600 * 1000 });
+      return res.redirect("/account/accountview");
+    } catch (error) {
+      next(error); // ✅ Correctly pass errors to Express error handling
+    } 
+  };
+  
+/* 
+  login Management request
+  */
+  account.accountView = async function (req, res, next) {
+    try {
+      let nav = await utilities.getNav();
+      let accountview = await utilities.accountView();
+      return res.render("account/accountview", {
+        title: "Account View",
+        nav,
+        accountview
+    });
+    } catch (error) {
+      next(error); // ✅ Correctly pass errors to Express error handling
+    }
+  };
 
 module.exports = account 

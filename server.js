@@ -18,6 +18,7 @@ const pool = require('./database/')
 const accountRoute = require("./routes/accountRoute")
 const bodyParser = require("body-parser")
 const inventoryMgmRoute = require("./routes/inventoryMgmRoute")
+const cookieParser = require("cookie-parser")
 
 
 
@@ -37,6 +38,8 @@ app.use(session({
 
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }))
+app.use(cookieParser())
+app.use(utilities.checkJWTToken)
 
 // Express Messages Middleware
 app.use(require('connect-flash')())
