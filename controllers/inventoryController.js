@@ -5,18 +5,82 @@ const inventoryModel = require("../models/inventory-model");
 
 const invMgm = {};
 
-invMgm.InventoryManagement = async function (req, res, next) {
+/* ***************************
+ *  Build inventory by classification view
+ * ************************** */
+invMgm.buildByClassificationId = async function (req, res, next) {
+  const classification_id = req.params.classificationId
+  const data = await inventoryModel.getInventoryByClassificationId(classification_id)
+  if (!data || data.length === 0) {
+    console.error("Error: No data returned for classification_id:", classification_id);
+    return res.status(404).send("No inventory found for this classification.");
+}
+  const grid = await utilities.buildClassificationGrid(data)
+  let nav = await utilities.getNav()
+  const className = data[0].classification_name
+  res.render("./inventory/classification", {
+    title: className + " carDatas",
+    nav,
+    grid,
+  })
+}
+
+
+/* ***************************
+ *  Build car detail view
+ * ************************** */
+invMgm.buildCarDetail = async function (req, res, next) {
+  try {
+    // Get the car ID from the request parameters
+    const car_id = req.params.invId;
+
+    // Fetch car details from the database
+    const carData = await inventoryModel.getCarDetailById(car_id);
+
+    // Check if carData exists
+    if (!carData) {
+      return res.status(404).render("error", {
+        title: "Car Not Found",
+        message: "The car you are looking for does not exist.",
+      });
+    }
+
+    // Fetch navigation menu
+    const nav = await utilities.getNav();
+
+    // Build the car details HTML or any required data format
+    const carDetails = await utilities.buildCarDetailPage(carData);
+
+    console.log("carDetails being passed to template:", carDetails);
+
+
+    // Render the car detail view with required data
+    res.render("./inventory/car-detail", {
+      title: `${carData.inv_make} ${carData.inv_model} Details`,
+      nav,
+      carDetails,
+    });
+  } catch (err) {
+    // Log the error and render an error page
+    console.error("Error building car detail view:", err);
+    next(err);
+  }
+};
+
+invMgm.buildManagementView = async function (req, res, next) {
     try {
         const flashMessage = req.session.flashMessage || null;
         req.session.flashMessage = null; // Clear message after displaying
         
         // Fetch navigation menu inside the function
         const nav = await utilities.getNav();
-
+        const classificationSelect = await utilities.buildClassificationList()
         res.render("inventory/management", {
-            flashMessage,
+            
             title: "Vehicle Management",
-            nav
+            nav,
+            flashMessage,
+            classificationSelect
         });
     } catch (error) {
         console.error("Error in InventoryManagement:", error);
@@ -92,7 +156,7 @@ invMgm.addInventory = async function (req, res)  {
        });
    };
 
-  invMgm.processInventory = async (req, res) => {
+invMgm.processInventory = async (req, res) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
         console.log("❌ Validation errors:", errors.array());
@@ -139,4 +203,24 @@ invMgm.addInventory = async function (req, res)  {
     }
 };
 
+
+/*
+  Return Inventory by Classification As JSON
+*/
+
+invMgm.getInventoryJSON = async (req, res, next) => {
+    try {
+        const classification_id = parseInt(req.params.classification_id);
+        const invData = await inventoryModel.getInventoryByClassificationId(classification_id);
+
+        if (invData.length > 0) {
+            return res.json(invData);
+        } else {
+            return res.status(404).json({ error: "No inventory found." });
+        }
+    } catch (error) {
+        console.error("Error fetching inventory:", error);
+        next(error);
+    }
+};
 module.exports = invMgm;

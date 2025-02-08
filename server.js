@@ -9,6 +9,7 @@ const express = require("express")
 const expressLayouts = require("express-ejs-layouts")
 const env = require("dotenv").config()
 const app = express()
+const path = require("path");
 const static = require("./routes/static")
 const baseController = require("./controllers/baseController")
 const inventoryRoute = require("./routes/inventoryRoute")
@@ -17,7 +18,6 @@ const session = require("express-session")
 const pool = require('./database/')
 const accountRoute = require("./routes/accountRoute")
 const bodyParser = require("body-parser")
-const inventoryMgmRoute = require("./routes/inventoryMgmRoute")
 const cookieParser = require("cookie-parser")
 
 
@@ -40,6 +40,7 @@ app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }))
 app.use(cookieParser())
 app.use(utilities.checkJWTToken)
+app.use(express.static(path.join(__dirname, "public/js")));
 
 // Express Messages Middleware
 app.use(require('connect-flash')())
@@ -66,10 +67,10 @@ app.get("/", utilities.handleErrors(baseController.buildHome))
 app.use("/account", accountRoute)
 
 // Inventory Management route
-app.use("/inv", inventoryMgmRoute)
+app.use("/inv", inventoryRoute)
 
 // Inventory routes
-app.use("/", inventoryRoute)
+// app.use("/", inventoryRoute)
 
 // Basic error handling
 app.post("/error-log", (req, res) => {

@@ -42,6 +42,10 @@ async function getCarDetailById(invId) {
   }
 }
 
+/*
+ Build vehicle management view
+*/
+
 /* ***************************
  *  insert a new Car
  * ************************** */
@@ -73,4 +77,6 @@ async function registerNewInventory(
   }
 }
 
-module.exports = {getClassifications, getInventoryByClassificationId, getCarDetailById, registerNewInventory}
+
+
+module.exports = { getInventoryByClassificationId, getClassifications, getCarDetailById, registerNewInventory }

@@ -1,5 +1,6 @@
 const path = require('path')
-const invModel = require("../models/inventory-model")
+const pool = require("../database");
+const inventoryModel = require("../models/inventory-model")
 const jwt = require("jsonwebtoken")
 require("dotenv").config()
 const Util = {}
@@ -8,7 +9,7 @@ const Util = {}
  * Constructs the nav HTML unordered list
  ************************** */
 Util.getNav = async function (req, res, next) {
-  let data = await invModel.getClassifications()
+  let data = await inventoryModel.getClassifications()
   let list = "<ul>"
   list += '<li><a href="/" title="Home page">Home</a></li>'
   data.rows.forEach((row) => {
@@ -185,7 +186,7 @@ Util.addClassification = function (classification_name = "") {
 
 
 Util.addInventoryForm = async function (classification_id, inv_make, inv_model, inv_year, inv_description, inv_image, inv_thumbnail, inv_price, inv_miles, inv_color) {
-  let classoptions = await invModel.getClassifications()
+  let classoptions = await inventoryModel.getClassifications()
   let classificationOptions = classoptions.rows.map(classification => `
       <option value="${classification.classification_id}" ${classification.classification_id === classification_id ? "selected" : ""}>
           ${classification.classification_name}
@@ -241,6 +242,27 @@ Util.addInventoryForm = async function (classification_id, inv_make, inv_model, 
   `;
 };
 
+Util.buildClassificationList = async function buildClassificationList() {
+  try {
+      const query = "SELECT classification_id, classification_name FROM classification ORDER BY classification_name";
+      const result = await pool.query(query);
+
+      if (!result.rows || result.rows.length === 0) {
+          console.error("Error: No classifications found.");
+          return "<p>No classifications available.</p>"; // Safe fallback
+      }
+
+      let options = `<option value="">-- Select Classification --</option>`;
+      result.rows.forEach((row) => {
+          options += `<option value="${row.classification_id}">${row.classification_name}</option>`;
+      });
+
+      return `<select id="classificationList" name="classification_id">${options}</select>`;
+  } catch (error) {
+      console.error("Error fetching classifications:", error);
+      return "<p>Error loading classifications.</p>";
+  }
+}
 
 /* ****************************************
  * Middleware For Handling Errors

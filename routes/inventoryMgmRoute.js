@@ -10,7 +10,7 @@ router.get("/add-classification", invMgm.addClassification);
 router.get("/add-vehicle", invMgm.addInventory);
 
 // Route for Inventory Management View
-router.get("/", invMgm.InventoryManagement); 
+router.get("/", invMgm.buildManagementView); 
 
 router.post(
   "/add-classification",
@@ -28,5 +28,6 @@ router.post("/add-inventory",
   invValidate.checkInvData,
   invMgm.processInventory
 );
+
 
 module.exports = router;
