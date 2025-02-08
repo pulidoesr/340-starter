@@ -23,7 +23,7 @@ router.post(
 router.get("/add-vehicle", inventoryController.addInventory);
 
 // Route to get individual car details
-router.get("/inv/detail/:invId", inventoryController.buildCarDetail);
+router.get("/detail/:invId", inventoryController.buildCarDetail);
 
 // Route to build inventory by classification view
 router.get("/type/:classificationId", inventoryController.buildByClassificationId);
@@ -37,13 +37,21 @@ router.post("/add-inventory",
 );
 
 /*
-   Get inventoryt for AJAX Rout
+   Get inventoryt for AJAX Route
 */
 router.get(
   "/getInventory/:classification_id",
   // utilities.checkAccountType,
   utilities.handleErrors(inventoryController.getInventoryJSON)
 );
+
+/*
+  Edit car inventory selected
+*/
+router.get(
+  "/edit/:invId",
+  utilities.handleErrors(inventoryController.editInventoryById)
+)
 
 // Route for Inventory Management View
 router.get("/", inventoryController.buildManagementView); 

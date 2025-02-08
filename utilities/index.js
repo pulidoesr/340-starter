@@ -264,6 +264,59 @@ Util.buildClassificationList = async function buildClassificationList() {
   }
 }
 
+Util.buildCarEditPage = async function (classification_id, inv_id, inv_make, inv_model, inv_year, inv_description, inv_image, inv_thumbnail, inv_price, inv_miles, inv_color) {
+const caredit =
+   `
+  <form action="/edit" method="POST" id="carEditForm" onsubmit="console.log('carEditForm')>
+      <!-- Id-->
+      <input type="hidden" id="inv_id" name="inv_id" value="${inv_id || ""}">
+      
+      <!-- Display Inventory ID (Read-Only) -->
+      <label for="inv_id">Inventory ID:</label>
+      <input type="text" id="inv_id_display" name="inv_id_display" value="${inv_id || ""}" readonly>
+      
+      <!-- Make -->
+      <label for="inv_make">Make:</label>
+      <input type="text" id="inv_make" name="inv_make" required value="${inv_make || ""}">
+
+      <!-- Model -->
+      <label for="inv_model">Model:</label>
+      <input type="text" id="inv_model" name="inv_model" required value="${inv_model || ""}">
+
+      <!-- Description -->
+      <label for="inv_description">Description:</label>
+      <textarea id="inv_description" name="inv_description" required>${inv_description || ""}</textarea>
+
+      <!-- Image Path -->
+      <label for="inv_image">Image Path:</label>
+      <input type="text" id="inv_image" name="inv_image" required value="${inv_image || "/images/vehicles/no-image.png"}">
+
+      <!-- Thumbnail Path -->
+      <label for="inv_thumbnail">Thumbnail Path:</label>
+      <input type="text" id="inv_thumbnail" name="inv_thumbnail" required value="${inv_thumbnail || "/images/vehicles/no-image.png"}">
+
+      <!-- Price (No Commas) -->
+      <label for="inv_price">Price:</label>
+      <input type="number" id="inv_price" name="inv_price" required value="${inv_price || ""}">
+
+      <!-- Year -->
+      <label for="inv_year">Year:</label>
+      <input type="number" id="inv_year" name="inv_year" required min="1900" max="2099" value="${inv_year || ""}">
+
+      <!-- Miles -->
+      <label for="inv_miles">Miles:</label>
+      <input type="number" id="inv_miles" name="inv_miles" required value="${inv_miles || ""}">
+
+      <!-- Color -->
+      <label for="inv_color">Color:</label>
+      <input type="text" id="inv_color" name="inv_color" required value="${inv_color || ""}">
+
+      <button type="submit" class="submit-btn">Edit Car</button>
+  </form>
+  `;
+  return caredit;
+};
+
 /* ****************************************
  * Middleware For Handling Errors
  * Wrap other function in this for 

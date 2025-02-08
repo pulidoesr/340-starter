@@ -223,4 +223,30 @@ invMgm.getInventoryJSON = async (req, res, next) => {
         next(error);
     }
 };
+
+invMgm.editInventoryById = async (req, res, next) => {
+    const inv_id = parseInt(req.params.invId)
+    let nav = await utilities.getNav()
+    console.log("Inventory Id:" + inv_id)
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        console.log("❌ Validation errors:", errors.array());
+        return res.render("./inventory/car-edit", {
+            title: "Edit",
+            flashMessage: "Please fix the errors below.",
+            errors: errors.array(),
+        });
+    }
+    const itemData = await inventoryModel.getCarDetailById(inv_id)
+    const classificationSelect = await utilities.buildClassificationList(itemData.classification_id)
+    const caredit = await utilities.buildCarEditPage(
+        itemData.classificationId, itemData.inv_id, itemData.inv_make, itemData.inv_model, itemData.inv_year, itemData.inv_description, itemData.inv_image, itemData.inv_thumbnail, itemData.inv_price, itemData.inv_price, itemData.inv_miles, itemData.inv_color)
+    const itemName = `${itemData.inv_make} ${itemData.inv_model}`
+    res.render("./inventory/car-edit", {
+        title: "Edit " + itemName,
+        nav,
+        errors: errors,
+        caredit
+    })
+}   
 module.exports = invMgm;
