@@ -69,9 +69,8 @@ invMgm.buildCarDetail = async function (req, res, next) {
 
 invMgm.buildManagementView = async function (req, res, next) {
     try {
-        const flashMessage = req.session.flashMessage || null;
-        req.session.flashMessage = null; // Clear message after displaying
-        
+        const flashMessage = req.flash("notice")
+                
         // Fetch navigation menu inside the function
         const nav = await utilities.getNav();
         const classificationSelect = await utilities.buildClassificationList()
@@ -283,7 +282,7 @@ invMgm.updateInventory = async function (req, res, next)  {
     const itemName = inv_make + " " + inv_model
     console.log(`✅ Flash message set: The ${itemName} was successfully updated.`);
     req.flash("notice", `The ${itemName} was successfully updated.`)
-    return res.redirect("/inv/")
+    res.redirect("/inv/")
     
   } else {
     const errors = validationResult(req);
