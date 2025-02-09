@@ -41,6 +41,13 @@ app.use(bodyParser.urlencoded({ extended: true }))
 app.use(cookieParser())
 app.use(utilities.checkJWTToken)
 app.use(express.static(path.join(__dirname, "public/js")));
+app.use(utilities.checkLoginStatus);
+app.use((req, res, next) => {
+  res.locals.accountData = req.session.accountData || null;
+  next();
+});
+
+
 
 // Express Messages Middleware
 app.use(require('connect-flash')())
@@ -69,8 +76,9 @@ app.use("/account", accountRoute)
 // Inventory Management route
 app.use("/inv", inventoryRoute)
 
-// Inventory routes
-// app.use("/", inventoryRoute)
+
+
+
 
 // Basic error handling
 app.post("/error-log", (req, res) => {

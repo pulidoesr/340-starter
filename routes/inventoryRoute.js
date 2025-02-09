@@ -5,14 +5,20 @@ const inventoryController = require("../controllers/inventoryController")
 const utilities = require("../utilities")
 const regValidate = require("../utilities/classification-validation")
 const invValidate= require("../utilities/inventory-validation")
+const checkAuth = require("../utilities/checkAuth");
 
 // Process routes (MVC approach)
-router.get("/add-classification", inventoryController.addClassification);
-router.get("/add-vehicle", inventoryController.addInventory);
+router.get("/add-classification",
+   checkAuth,
+   inventoryController.addClassification);
+router.get("/add-vehicle",
+   checkAuth,
+   inventoryController.addInventory);
 
 
 router.post(
   "/add-classification",
+   checkAuth,
    regValidate.classificationRules(),
    regValidate.checkClasData, 
    inventoryController.processClassification
@@ -20,7 +26,9 @@ router.post(
 
 
 // Route to show the add vehicle form
-router.get("/add-vehicle", inventoryController.addInventory);
+router.get("/add-vehicle",
+   checkAuth,
+   inventoryController.addInventory);
 
 // Route to get individual car details
 router.get("/detail/:invId", inventoryController.buildCarDetail);
@@ -31,6 +39,7 @@ router.get("/type/:classificationId", inventoryController.buildByClassificationI
 
 // Route to process form submission
 router.post("/add-inventory", 
+  checkAuth,
   invValidate.inventoryRules(),
   invValidate.checkInvData,
   inventoryController.processInventory
@@ -49,6 +58,7 @@ router.get(
 */
 router.get(
   "/edit/:invId",
+  checkAuth,
   utilities.handleErrors(inventoryController.editInventoryById)
 )
 
@@ -57,6 +67,7 @@ router.get(
 */
 router.get(
   "/delete/:invId",
+  checkAuth,
   utilities.handleErrors(inventoryController.deleteInventoryById)
 )
 /*
@@ -64,6 +75,7 @@ router.get(
 */
 router.post(
   "/update",
+  checkAuth,
   invValidate.inventoryRules(),
   invValidate.checkUpdateData,
   utilities.handleErrors(inventoryController.updateInventory))
@@ -73,10 +85,13 @@ router.post(
 */
 router.post(
   "/delete",
+  checkAuth,
   utilities.handleErrors(inventoryController.deleteInventory))
 
 // Route for Inventory Management View
-router.get("/", utilities.handleErrors(inventoryController.buildManagementView)); 
+router.get("/", 
+  checkAuth,
+  utilities.handleErrors(inventoryController.buildManagementView)); 
 
 // Example: Handle /inventory/error-log
 router.post("/error-log", (req, res) => {

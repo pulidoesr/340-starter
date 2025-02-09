@@ -45,4 +45,11 @@ router.post("/register",
   regValidate.checkRegData, 
   utilities.handleErrors(accountController.buildRegisterAccount))
 
+// Lougout Control
+router.get("/logout", (req, res) => {
+  req.session.destroy(() => {
+    res.redirect("/");
+  });
+});
+
 module.exports = router;

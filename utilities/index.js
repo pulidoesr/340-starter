@@ -392,4 +392,12 @@ Util.checkLogin = (req, res, next) => {
   }
 }
 
+/*
+  Check Login Status
+*/
+Util.checkLoginStatus = (req, res, next) => {
+  res.locals.accountData = req.session.accountData || null;
+  next();
+};
+
 module.exports = Util

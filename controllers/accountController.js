@@ -102,6 +102,7 @@ account.buildRegisterAccount = async function (req, res) {
       }
   
       delete accountData.account_password; // Remove password before sending user data
+      req.session.accountData = accountData;
       const accessToken = jwt.sign(accountData, process.env.ACCESS_TOKEN_SECRET, { expiresIn: 3600 * 1000 });
   
       res.cookie("jwt", accessToken, { httpOnly: true, maxAge: 3600 * 1000 });
@@ -126,6 +127,20 @@ account.buildRegisterAccount = async function (req, res) {
     } catch (error) {
       next(error); // ✅ Correctly pass errors to Express error handling
     }
+  };
+
+  /* 
+    Account Logout
+  */
+  account.logout = async function (req, res) {
+    req.session.destroy((err) => {
+      if (err) {
+        console.error("Logout Error:", err);
+        return res.redirect("/account");
+      }
+      res.clearCookie("jwt");
+      res.redirect("/");
+    });
   };
 
 module.exports = account 
