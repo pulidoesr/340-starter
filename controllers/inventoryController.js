@@ -12,8 +12,10 @@ invMgm.buildByClassificationId = async function (req, res, next) {
   const classification_id = req.params.classificationId
   const data = await inventoryModel.getInventoryByClassificationId(classification_id)
   if (!data || data.length === 0) {
-    console.error("Error: No data returned for classification_id:", classification_id);
-    return res.status(404).send("No inventory found for this classification.");
+    // 🔹 Set a flash message
+    req.flash("notice", "No inventory found for this classification.");
+    // 🔹 Redirect back to the previous page (or inventory management)
+    return res.redirect("back"); // Redirects the user to the previous page
 }
   const grid = await utilities.buildClassificationGrid(data)
   let nav = await utilities.getNav()
@@ -185,7 +187,7 @@ invMgm.processInventory = async (req, res) => {
         );
 
         if (regResult) {
-            req.session.flashMessage = "Inventory successfully added!";
+            req.flash("notice", `The ${inv_make} ${inv_model} was successfully added.`);
             return res.status(201).redirect("/inv/");
         } else {
             throw new Error("Database insertion failed.");
@@ -300,7 +302,90 @@ invMgm.updateInventory = async function (req, res, next)  {
   }
 }
 
-    
+/*
+   Delete car view Page
+*/
+
+invMgm.deleteInventoryById = async (req, res, next) => {
+    try {
+        const inv_id = parseInt(req.params.invId);
+        let nav = await utilities.getNav();
+        
+        // ✅ Ensure errors is always an array
+        let errors = validationResult(req);
+        errors = errors.isEmpty() ? [] : errors.array();
+
+        // ✅ Fetch the car details from database
+        const itemData = await inventoryModel.getCarDetailById(inv_id);
+        
+        if (!itemData) {
+            req.flash("error", "Vehicle not found.");
+            return res.redirect("/inv/");
+        }
+
+        const cardelete = await utilities.buildCarDeletePage(
+            itemData.inv_id, 
+            itemData.inv_make, 
+            itemData.inv_model, 
+            itemData.inv_year, 
+            itemData.inv_price
+        );
+
+        const itemName = `${itemData.inv_make} ${itemData.inv_model}`;
+
+        res.render("./inventory/car-delete", {
+            title: "Delete " + itemName,
+            nav,
+            errors,  // ✅ Always an array, avoids "null.length" error
+            cardelete
+        });
+
+    } catch (error) {
+        console.error("Error in deleteInventoryById:", error);
+        req.flash("error", "An error occurred while fetching vehicle details.");
+        return res.redirect("/inv/");
+    }
+};
+
+
+// Function to delete a vehicle
+
+invMgm.deleteInventory = async function (req, res, next)  {
+    try {
+        console.log("Parameters: " + req.body)
+        const inv_id = req.body.inv_id;
+
+        // ✅ Get item details before deleting to retain `inv_make` and `inv_model`
+        const itemData = await inventoryModel.getCarDetailById(inv_id);
+        console.log(itemData)
+        if (!itemData) {
+            req.flash("error", "Vehicle not found.");
+            return res.redirect("/inv/");
+        }
+
+        const itemName = `${itemData.inv_make} ${itemData.inv_model}`;
+
+        // ✅ Perform the delete operation
+        const deleteResult = await inventoryModel.deleteInventoryById(inv_id);
+
+        if (deleteResult) {
+            // ✅ Store a success flash message
+            req.flash("notice", `The ${itemName} was successfully deleted.`);
+        } else {
+            throw new Error("Delete operation failed.");
+        }
+        return res.redirect("/inv/");
+    } catch (error) {
+        console.error("Error deleting inventory:", error);
+        req.flash("error", "An error occurred while deleting the vehicle.");
+        return res.render("inventory/car-delete", {
+            title: "Delete Vehicle",
+            nav: await utilities.getNav(),
+            errors: [],  // ✅ Fix: Always pass an empty array
+            itemData: null
+        });
+    }
+};
 
 
 module.exports = invMgm;

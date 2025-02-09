@@ -16,18 +16,32 @@ classificationList.addEventListener("change", function () {
                 if (response.ok) {
                     return response.json();
                 }
-                throw new Error("Network response was not OK");
+                throw new Error("No inventory found");
             })
             .then(function (data) {
                 console.log(data);
                 buildInventoryList(data);
             })
             .catch(function (error) {
+                clearInventoryList();
                 console.log("JSON fetch error: ", error.message);
                 throw new Error("Fetch of JSON data failed.");
+                
             });
     }
 });
+
+// ✅ Function to clear inventory list
+function clearInventoryList() {
+    let inventoryDisplay = document.getElementById("inventoryDisplay");
+    inventoryDisplay.innerHTML = `
+        <thead>
+            <tr><th>Vehicle Name</th><td>&nbsp;</td><td>&nbsp;</td></tr>
+        </thead>
+        <tbody>
+            <tr><td colspan="3">No inventory found.</td></tr>
+        </tbody>`;
+}
 
 // Build inventory items into HTML table components and inject into DOM
 function buildInventoryList(data) {

@@ -317,6 +317,41 @@ const caredit =
   return caredit;
 };
 
+Util.buildCarDeletePage = async function (inv_id, inv_make, inv_model, inv_year, inv_price) {
+  const cardelete =
+     `
+    <form action="/inv/delete" method="POST" id="carDeleteForm" onsubmit="console.log('carDeleteForm')>
+        <!-- Id-->
+        <input type="hidden" id="inv_id" name="inv_id" value="${inv_id || ""}">
+        
+        <!-- Display Inventory ID (Read-Only) -->
+        <label for="inv_id">Inventory ID:</label>
+        <input type="text" id="inv_id" name="inv_id" value="${inv_id || ""}" readonly>
+  
+        <!-- Make -->
+        <label for="inv_make">Make:</label>
+        <input type="text" id="inv_make" name="inv_make" required value="${inv_make || ""}" readonly>
+  
+        <!-- Model -->
+        <label for="inv_model">Model:</label>
+        <input type="text" id="inv_model" name="inv_model" required value="${inv_model || ""}" readonly>
+  
+        <!-- Year -->
+        <label for="inv_year">Year:</label>
+        <input type="number" id="inv_year" name="inv_year" required min="1900" max="2099" value="${inv_year || ""}" readonly>
+
+       <!-- Price (No Commas) -->
+        <label for="inv_price">Price:</label>
+        <input type="number" id="inv_price" name="inv_price" required value="${inv_price || ""}" readonly>
+  
+        <p> Confirm Deletion - The delete is permanent. </p>
+
+        <button type="submit" class="submit-btn">Delete Car</button>
+    </form>
+    `;
+    return cardelete;
+  };
+
 /* ****************************************
  * Middleware For Handling Errors
  * Wrap other function in this for 

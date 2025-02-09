@@ -31,15 +31,25 @@ async function getInventoryByClassificationId(classification_id) {
  * ************************** */
 async function getCarDetailById(invId) {
   try {
+    console.log(`Fetching inventory details for ID: ${invId}`);
+
     const data = await pool.query(
       `SELECT * FROM public.inventory 
           WHERE inv_id = $1`,
       [invId]
     )
-    return data.rows[0]
-  } catch (error) {
-    console.error("getclassificationsbyid error " + error)
-  }
+// ✅ Check if data exists
+if (data.rows.length > 0) {
+  console.log("✅ Found vehicle:", data.rows[0]);
+  return data.rows[0];
+} else {
+  console.log("❌ No vehicle found for ID:", invId);
+  return null;  // Explicitly return null if not found
+}
+} catch (error) {
+console.error("Database error in getCarDetailById:", error);
+throw error;
+}
 }
 
 /*
@@ -108,6 +118,31 @@ async function updateInventoryById(
   }
 }
 
+/* ***************************
+ *  delete a Car
+ * ************************** */
+async function deleteInventoryById(
+  inv_id
+) {
+  try {
+    console.log(`Deleting inventory with ID: ${inv_id}`);
+      const sql = `
+          DELETE FROM public.inventory
+            WHERE inv_id = $1
+            RETURNING * `;
 
+      const values = [
+          inv_id
+      ];
 
-module.exports = { getInventoryByClassificationId, getClassifications, getCarDetailById, registerNewInventory, updateInventoryById }
+      const result = await pool.query(sql, values);
+      // ✅ Log the result for debugging
+        console.log("Delete Result:", result.rows);
+      return result.rowCount > 0; 
+  } catch (error) {
+    console.error("Database DELETE error:", error);
+    throw error; 
+  }
+}
+
+module.exports = { getInventoryByClassificationId, getClassifications, getCarDetailById, registerNewInventory, updateInventoryById, deleteInventoryById }

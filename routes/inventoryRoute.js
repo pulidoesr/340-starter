@@ -53,6 +53,13 @@ router.get(
 )
 
 /*
+   Delete Inventory for AJAX Route
+*/
+router.get(
+  "/delete/:invId",
+  utilities.handleErrors(inventoryController.deleteInventoryById)
+)
+/*
   Update car inventory selected
 */
 router.post(
@@ -60,6 +67,13 @@ router.post(
   invValidate.inventoryRules(),
   invValidate.checkUpdateData,
   utilities.handleErrors(inventoryController.updateInventory))
+
+/*
+  delete car inventory selected
+*/
+router.post(
+  "/delete",
+  utilities.handleErrors(inventoryController.deleteInventory))
 
 // Route for Inventory Management View
 router.get("/", utilities.handleErrors(inventoryController.buildManagementView)); 

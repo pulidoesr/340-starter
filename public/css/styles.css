@@ -772,8 +772,8 @@ input.invalid, textarea.invalid, select.invalid {
   border-top-right-radius: 8px;
 }
 
-/* add inventory */
-.edit-car {
+/* edit car inventory */
+.edit-car, .delete-car {
   background-color: #007BFF; /* Blue background */
   padding: 20px;
   border-radius: 10px;
