@@ -227,7 +227,6 @@ invMgm.getInventoryJSON = async (req, res, next) => {
 invMgm.editInventoryById = async (req, res, next) => {
     const inv_id = parseInt(req.params.invId)
     let nav = await utilities.getNav()
-    console.log("Inventory Id:" + inv_id)
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
         console.log("❌ Validation errors:", errors.array());
@@ -238,9 +237,10 @@ invMgm.editInventoryById = async (req, res, next) => {
         });
     }
     const itemData = await inventoryModel.getCarDetailById(inv_id)
-    const classificationSelect = await utilities.buildClassificationList(itemData.classification_id)
+    console.log(itemData)
     const caredit = await utilities.buildCarEditPage(
-        itemData.classificationId, itemData.inv_id, itemData.inv_make, itemData.inv_model, itemData.inv_year, itemData.inv_description, itemData.inv_image, itemData.inv_thumbnail, itemData.inv_price, itemData.inv_price, itemData.inv_miles, itemData.inv_color)
+        itemData.inv_id, itemData.inv_make, itemData.inv_model, itemData.inv_year, itemData.inv_description, itemData.inv_image, itemData.inv_thumbnail, itemData.inv_price, itemData.inv_miles, itemData.inv_color)
+    console.log("Classification_id: " + itemData.classification_id)
     const itemName = `${itemData.inv_make} ${itemData.inv_model}`
     res.render("./inventory/car-edit", {
         title: "Edit " + itemName,
@@ -248,5 +248,60 @@ invMgm.editInventoryById = async (req, res, next) => {
         errors: errors,
         caredit
     })
-}   
+} 
+
+// Function to update a vehicle
+
+invMgm.updateInventory = async function (req, res, next)  {
+    // Fetch navigation menu inside the function
+   const nav = await utilities.getNav();
+   const {
+    inv_id,
+    inv_make,
+    inv_model,
+    inv_year,
+    inv_description,
+    inv_image,
+    inv_thumbnail,
+    inv_price,
+    inv_miles,
+    inv_color
+  } = req.body
+  const updateResult = await inventoryModel.updateInventoryById(
+    inv_id,
+    inv_make,
+    inv_model,
+    inv_year,
+    inv_description,
+    inv_image,
+    inv_thumbnail,
+    inv_price,
+    inv_miles,
+    inv_color
+  )
+ if (updateResult) {
+    const itemName = inv_make + " " + inv_model
+    console.log(`✅ Flash message set: The ${itemName} was successfully updated.`);
+    req.flash("notice", `The ${itemName} was successfully updated.`)
+    return res.redirect("/inv/")
+    
+  } else {
+    const errors = validationResult(req);
+    const classificationSelect = await utilities.buildClassificationList(classification_id)
+    const caredit = await utilities.buildCarEditPage(inv_id, inv_make, inv_model, inv_year, inv_description, inv_image, inv_thumbnail, inv_price, inv_miles, inv_color, classification_id)
+    const itemName = `${inv_make} ${inv_model}`
+    req.flash("notice", "Sorry, the insert failed.")
+    res.status(501).render("inventory/car-edit", {
+    title: "Edit " + itemName,
+    nav,
+    errors,
+    classificationSelect: classificationSelect,
+    caredit
+    })
+  }
+}
+
+    
+
+
 module.exports = invMgm;

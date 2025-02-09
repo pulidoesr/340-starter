@@ -41,28 +41,28 @@ router.post("/add-inventory",
 */
 router.get(
   "/getInventory/:classification_id",
-  // utilities.checkAccountType,
   utilities.handleErrors(inventoryController.getInventoryJSON)
 );
 
 /*
-  Edit car inventory selected
+   Edit Inventory for AJAX Route
 */
 router.get(
   "/edit/:invId",
   utilities.handleErrors(inventoryController.editInventoryById)
 )
 
+/*
+  Update car inventory selected
+*/
+router.post(
+  "/update",
+  invValidate.inventoryRules(),
+  invValidate.checkUpdateData,
+  utilities.handleErrors(inventoryController.updateInventory))
+
 // Route for Inventory Management View
-router.get("/", inventoryController.buildManagementView); 
-
-
-// handling a GET request to /inventory
-router.get("/", (req, res) => {
-  res.send("Inventory home page");
-});
-
-
+router.get("/", utilities.handleErrors(inventoryController.buildManagementView)); 
 
 // Example: Handle /inventory/error-log
 router.post("/error-log", (req, res) => {

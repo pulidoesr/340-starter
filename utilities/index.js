@@ -264,17 +264,17 @@ Util.buildClassificationList = async function buildClassificationList() {
   }
 }
 
-Util.buildCarEditPage = async function (classification_id, inv_id, inv_make, inv_model, inv_year, inv_description, inv_image, inv_thumbnail, inv_price, inv_miles, inv_color) {
+Util.buildCarEditPage = async function (inv_id, inv_make, inv_model, inv_year, inv_description, inv_image, inv_thumbnail, inv_price, inv_miles, inv_color) {
 const caredit =
    `
-  <form action="/edit" method="POST" id="carEditForm" onsubmit="console.log('carEditForm')>
+  <form action="/inv/update" method="POST" id="carEditForm" onsubmit="console.log('carEditForm')>
       <!-- Id-->
       <input type="hidden" id="inv_id" name="inv_id" value="${inv_id || ""}">
       
       <!-- Display Inventory ID (Read-Only) -->
       <label for="inv_id">Inventory ID:</label>
-      <input type="text" id="inv_id_display" name="inv_id_display" value="${inv_id || ""}" readonly>
-      
+      <input type="text" id="inv_id" name="inv_id" value="${inv_id || ""}" readonly>
+
       <!-- Make -->
       <label for="inv_make">Make:</label>
       <input type="text" id="inv_make" name="inv_make" required value="${inv_make || ""}">
