@@ -1,10 +1,25 @@
 <% if (title) { %>
+  <h1><%= title %></h1>
+<% } else {
+  res.redirect('/');
+} %>
 
-  <% } else {
-    res.redirect('/')
-  } %>
-  <div id="flash-message" class="flash-message">
-    <%- messages() %>
-  </div>
+<!-- ✅ Display Flash Messages -->
+<div id="flash-message" class="flash-message">
+  <%- messages() %>
+</div>
 
+<!-- ✅ Dynamic Account View Content -->
 <%- accountview %>
+
+<!-- ✅ Display Greeting Based on Account Type -->
+<h2>Welcome, <%= accountData.account_firstname %></h2>
+
+<!-- ✅ Update Account Information Link (Always Visible) -->
+<p><a href="/account/update/<%= accountData.account_id %>">Update Account Information</a></p>
+
+<!-- ✅ Show Inventory Management Section Only for Employees or Admins -->
+<% if (accountData.account_type === "Employee" || accountData.account_type === "Admin") { %>
+    <h3>Inventory Management</h3>
+    <p><a href="/inv/">Manage Inventory</a></p>
+<% } %>

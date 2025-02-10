@@ -20,4 +20,41 @@ async function getAccountByEmail (account_email) {
   }
 }
 
-module.exports = { checkExistingEmail, getAccountByEmail };
+async function getAccountById (account_id) {
+  try {
+    const result = await pool.query(
+     'SELECT account_id, account_firstname, account_lastname, account_email, account_type, account_password FROM account WHERE account_id = $1', [account_id])
+    return result.rows[0]
+} catch (error) {
+ return new Error("No matching account Id")
+}
+}
+
+async function updateAccountById (accountId, firstname, lastname, email) {
+  try {
+      const sql = `
+          UPDATE account
+          SET account_firstname = $1, account_lastname = $2, account_email = $3
+          WHERE account_id = $4
+          RETURNING *;
+      `;
+
+      const values = [firstname, lastname, email, accountId];
+      const result = await pool.query(sql, values);
+      if (result.rowCount > 0) {
+        console.log("✅ Account updated successfully:", result.rows[0]);
+        return true;
+      } else {
+        console.warn("⚠️ No account updated. Possibly incorrect account ID.");
+        return false;
+      }
+    } catch (error) {
+      console.error("Database update error:", error);
+      if (error.code === "23505") { // PostgreSQL unique violation error code
+        throw new Error("Email already in use. Please use a different email.");
+      }
+      throw new Error("Could not update account");
+    }
+  }
+
+module.exports = { checkExistingEmail, getAccountByEmail, updateAccountById, getAccountById };

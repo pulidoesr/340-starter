@@ -9,7 +9,7 @@ const checkAuth = require("../utilities/checkAuth");
 
 // Process routes (MVC approach)
 router.get("/add-classification",
-   checkAuth,
+   utilities.checkAdminAuth,
    inventoryController.addClassification);
 router.get("/add-vehicle",
    checkAuth,
@@ -18,7 +18,7 @@ router.get("/add-vehicle",
 
 router.post(
   "/add-classification",
-   checkAuth,
+   utilities.checkAdminAuth,
    regValidate.classificationRules(),
    regValidate.checkClasData, 
    inventoryController.processClassification
@@ -27,7 +27,7 @@ router.post(
 
 // Route to show the add vehicle form
 router.get("/add-vehicle",
-   checkAuth,
+  utilities.checkAdminAuth,
    inventoryController.addInventory);
 
 // Route to get individual car details
@@ -39,7 +39,7 @@ router.get("/type/:classificationId", inventoryController.buildByClassificationI
 
 // Route to process form submission
 router.post("/add-inventory", 
-  checkAuth,
+  utilities.checkAdminAuth,
   invValidate.inventoryRules(),
   invValidate.checkInvData,
   inventoryController.processInventory
@@ -58,7 +58,7 @@ router.get(
 */
 router.get(
   "/edit/:invId",
-  checkAuth,
+  utilities.checkAdminAuth,
   utilities.handleErrors(inventoryController.editInventoryById)
 )
 
@@ -67,7 +67,7 @@ router.get(
 */
 router.get(
   "/delete/:invId",
-  checkAuth,
+  utilities.checkAdminAuth,
   utilities.handleErrors(inventoryController.deleteInventoryById)
 )
 /*
@@ -75,7 +75,7 @@ router.get(
 */
 router.post(
   "/update",
-  checkAuth,
+  utilities.checkAdminAuth,
   invValidate.inventoryRules(),
   invValidate.checkUpdateData,
   utilities.handleErrors(inventoryController.updateInventory))
@@ -85,12 +85,12 @@ router.post(
 */
 router.post(
   "/delete",
-  checkAuth,
+  utilities.checkAdminAuth,
   utilities.handleErrors(inventoryController.deleteInventory))
 
 // Route for Inventory Management View
 router.get("/", 
-  checkAuth,
+  utilities.checkAdminAuth,
   utilities.handleErrors(inventoryController.buildManagementView)); 
 
 // Example: Handle /inventory/error-log

@@ -4,6 +4,7 @@ const router = new express.Router()
 const accountController = require("../controllers/accountController")
 const utilities = require("../utilities")
 const regValidate = require("../utilities/account-validation")
+const checkAuth = require("../utilities/checkAuth")
 
 
 /* 
@@ -12,10 +13,12 @@ const regValidate = require("../utilities/account-validation")
 
 router.get('/login', utilities.handleErrors(accountController.buildLogin)); // Ensure this is correctly imported
 router.get('/accountview', utilities.handleErrors(accountController.accountView));
+router.get("/register", utilities.handleErrors(accountController.buildRegister))
 router.get("/", 
   utilities.checkLogin,
   utilities.handleErrors(accountController.accountView)
 )
+
 /*
  Process Login
  */
@@ -24,18 +27,6 @@ regValidate.loginRules(),
 regValidate.checkLoginData,
 utilities.handleErrors(accountController.accountLogin))
 
-/*
- Process Account
- */
- router.post ("/account",
-  regValidate.checkLoginData,
-  utilities.handleErrors(accountController.accountView))
-
-
-/*
-  Deliver Registration View
-*/
-router.get("/register", utilities.handleErrors(accountController.buildRegister))
 
 /*
   Process Registration
@@ -51,5 +42,17 @@ router.get("/logout", (req, res) => {
     res.redirect("/");
   });
 });
+
+// Acount Management
+router.get("/update/:accountId", 
+  checkAuth,
+  utilities.handleErrors(accountController.buildUpdateAccount));
+
+// ✅ Process Account Update Route
+router.post("/update/:accountId", 
+  checkAuth, 
+  utilities.handleErrors(accountController.processUpdateAccount)
+);
+
 
 module.exports = router;

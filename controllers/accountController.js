@@ -103,9 +103,16 @@ account.buildRegisterAccount = async function (req, res) {
   
       delete accountData.account_password; // Remove password before sending user data
       req.session.accountData = accountData;
+      console.log("✅ Session Data Set:", req.session.accountData); 
       const accessToken = jwt.sign(accountData, process.env.ACCESS_TOKEN_SECRET, { expiresIn: 3600 * 1000 });
   
       res.cookie("jwt", accessToken, { httpOnly: true, maxAge: 3600 * 1000 });
+      req.session.save((err) => { // ✅ Manually save session
+        if (err) {
+            console.error("❌ Error Saving Session:", err);
+            req.flash("notice", "Session error, please try again.");
+            return res.redirect("/account/login");
+        }})
       return res.redirect("/account/accountview");
     } catch (error) {
       next(error); // ✅ Correctly pass errors to Express error handling
@@ -118,6 +125,13 @@ account.buildRegisterAccount = async function (req, res) {
   account.accountView = async function (req, res, next) {
     try {
       let nav = await utilities.getNav();
+      const accountData = req.session.accountData;
+      if (!accountData) {
+        console.log("❌ No session data found.");
+        req.flash("notice", "You must be logged in to access the account page.");
+        return res.redirect("/account/login");
+    }
+      console.log("✅ Account Session Found:", accountData);
       let accountview = await utilities.accountView();
       return res.render("account/accountview", {
         title: "Account View",
@@ -142,5 +156,58 @@ account.buildRegisterAccount = async function (req, res) {
       res.redirect("/");
     });
   };
+
+  account.buildUpdateAccount = async function (req, res, next) {
+    try {
+        let nav = await utilities.getNav();
+        const accountId = req.params.accountId;
+        const accountData = await accountModel.getAccountById(accountId);
+
+        if (!accountData) {
+            req.flash("notice", "Account not found.");
+            return res.redirect("/account/accountview");
+        }
+
+        res.render("account/update", {
+            title: "Update Account Information",
+            nav,
+            accountData,
+            errors: null,
+        });
+    } catch (error) {
+        next(error);
+    }
+};
+
+account.processUpdateAccount = async function (req, res, next) {
+  try {
+      const { account_id, account_firstname, account_lastname, account_email } = req.body;
+
+      let nav = await utilities.getNav();
+      const updateResult = await accountModel.updateAccountById(
+          account_id,
+          account_firstname,
+          account_lastname,
+          account_email
+      );
+
+      if (updateResult) {
+          req.flash("notice", "Account information updated successfully.");
+          return res.redirect("/account/accountview");
+      } else {
+          req.flash("error", "Update failed. Please try again.");
+          return res.status(500).render("account/update", {
+              title: "Update Account Information",
+              nav,
+              accountData: { account_id, account_firstname, account_lastname, account_email },
+              errors: [],
+          });
+      }
+  } catch (error) {
+      console.error("Error updating account:", error);
+      next(error);
+  }
+};
+
 
 module.exports = account 

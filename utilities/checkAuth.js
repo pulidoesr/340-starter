@@ -2,6 +2,17 @@ const jwt = require("jsonwebtoken");
 
 function checkAuth(req, res, next) {
     try {
+        if (!req.session.accountData) {
+            console.log("❌ No session found in checkAuth.");
+            req.flash("notice", "You must be logged in to access this page.");
+            return res.redirect("/account/login"); // ✅ Stops execution
+        }
+        console.log("🔍 Middleware checkAuth - Session Data:", req.session);  // 🚀 Debugging
+        if (!req.session || !req.session.accountData) {
+           req.flash("notice", "You must be logged in to access the account page.");
+           return res.redirect("/account/login");
+        }
+    next();
         // Get the JWT from cookies
         const token = req.cookies.jwt;
         if (!token) {

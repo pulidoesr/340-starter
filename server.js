@@ -32,8 +32,13 @@ app.use(session({
   }),
   secret: process.env.SESSION_SECRET,
   resave: true,
-  saveUninitialized: true,
+  saveUninitialized: false,
   name: 'sessionId',
+  cookie: { 
+    httpOnly: true,  // 🔐 Helps prevent XSS attacks
+    secure: false,   // ❌ Set `true` only for HTTPS
+    maxAge: 3600000  
+}
 }))
 
 app.use(bodyParser.json())

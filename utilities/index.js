@@ -400,4 +400,16 @@ Util.checkLoginStatus = (req, res, next) => {
   next();
 };
 
+Util.checkAdminAuth = (req, res, next) => {
+  if (!req.session.accountData || 
+     (req.session.accountData.account_type !== "Admin" && req.session.accountData.account_type !== "Employee")) {
+      console.log("❌ Unauthorized Access Attempt.");
+      req.flash("notice", "You must be an Admin or Employee to access Inventory Management.");
+      return res.redirect("/account/accountview"); // ✅ Redirect non-admin users
+  }
+
+  console.log("✅ Access Granted - User Role:", req.session.accountData.account_type);
+  next(); // ✅ Allow access to route
+};
+
 module.exports = Util
