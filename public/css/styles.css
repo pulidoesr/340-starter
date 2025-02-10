@@ -747,29 +747,43 @@ input.invalid, textarea.invalid, select.invalid {
 /* Center the content and apply a white background */
 .accountview-container {
   display: flex;
-  justify-content: center; 
-  align-items: center; 
-  min-height: 100vh;  
-
+    flex-direction: column;
+    align-items: center; /* Centers everything */
+    min-height: 100vh; /* Ensures it takes full viewport height */
+    padding-top: 80px; /* Creates space from the top */
+    gap: 20px; /* Adds spacing between elements */
 }
 
 /* Inner box for the account content */
 .accountview-box {
-  width: 50%; 
-  background-color: white; 
+  width: 50%; /* Controls width */
+  max-width: 600px; /* Prevents it from being too large */
+  background: white;
   padding: 20px;
-  border-radius: 8px; 
-  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1); 
-  text-align: center; 
+  border-radius: 10px;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+  text-align: center;
+  position: relative; /* Keeps it in flow */
 }
 
 /* Style the header */
 .accountview-box h1 {
   background-color: #cce7f0; 
   padding: 15px;
-  margin: -20px -20px 20px -20px; 
-  border-top-left-radius: 8px;
-  border-top-right-radius: 8px;
+  margin: -30px -30px 20px -30px; 
+  border-top-left-radius: 12px;
+  border-top-right-radius: 12px;
+  font-size: 24px;
+  text-align: center;
+}
+
+/* 🔗 Account Links */
+.accountview-box a {
+  display: block;
+  color: #007bff;
+  text-decoration: underline;
+  font-weight: bold;
+  margin-top: 10px;
 }
 
 /* edit car inventory */
@@ -783,4 +797,49 @@ input.invalid, textarea.invalid, select.invalid {
   font-family: Arial, sans-serif;
 }
 
+/* 📄 Centered Form Container */
+.accountform-container {
+  background-color: white; /* White Background */
+  padding: 30px;
+  border-radius: 15px;
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+  width: 90%;
+  max-width: 600px;
+  text-align: center;
+  margin: 20px auto;
+}
 
+/* 🏷️ Form Labels */
+.accountform-container label {
+  display: block;
+  font-weight: bold;
+  text-align: left;
+  margin: 10px 0 5px;
+}
+
+/* ✏️ Input Fields */
+.accountform-container input {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 16px;
+}
+
+/* 🔘 Update Button */
+.accountform-container button {
+  width: 100%;
+  padding: 12px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  font-size: 16px;
+  cursor: pointer;
+  margin-top: 15px;
+}
+
+.accountform-container button:hover {
+  background-color: #0056b3;
+}

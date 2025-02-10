@@ -7,7 +7,6 @@ function checkAuth(req, res, next) {
             req.flash("notice", "You must be logged in to access this page.");
             return res.redirect("/account/login"); // ✅ Stops execution
         }
-        console.log("🔍 Middleware checkAuth - Session Data:", req.session);  // 🚀 Debugging
         if (!req.session || !req.session.accountData) {
            req.flash("notice", "You must be logged in to access the account page.");
            return res.redirect("/account/login");
@@ -25,6 +24,11 @@ function checkAuth(req, res, next) {
         if (!decoded || !decoded.account_type) {
             req.flash("notice", "Invalid authentication.");
             return res.redirect("/account/login");
+        }
+
+         // Check if user is authorized (Only 'Employee' or 'Admin' allowed)
+         if (decoded.account_type === "Client") {
+            return res.render("/account/update-account")
         }
 
         // Check if user is authorized (Only 'Employee' or 'Admin' allowed)

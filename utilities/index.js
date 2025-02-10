@@ -118,23 +118,6 @@ Util.buildLoginPage = function() {
   return loginPage;
 };
 
-/* ****************************************
- * Account View page HTML
- * ************************************ */
-Util.accountView = function() {
-  let accountview = "<div class=\"accountview-container\">";
-  accountview += "<div class=\"accountview-box\">";
-  // Page content
-  accountview += "<h1>Account Management</h1>";
-  accountview += "<p><strong>Welcome New</strong></p>";
-  accountview += "<p>You're logged in.</p>";
-  accountview += "<a href='#' class='edit-account'>Edit Account Information</a>";
-
-  accountview += "</div>"; // Close accountlogin-box
-  accountview += "</div>"; // Close accountlogin-container
-
-  return accountview;
-};
 
 Util.buildRegisterPage = function (account_firstname = "", account_lastname = "", account_email = "") {
   return `

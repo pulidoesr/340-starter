@@ -32,6 +32,7 @@ async function getAccountById (account_id) {
 
 async function updateAccountById (accountId, firstname, lastname, email) {
   try {
+      console.log(accountId, firstname, lastname, email)
       const sql = `
           UPDATE account
           SET account_firstname = $1, account_lastname = $2, account_email = $3

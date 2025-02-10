@@ -131,12 +131,11 @@ account.buildRegisterAccount = async function (req, res) {
         req.flash("notice", "You must be logged in to access the account page.");
         return res.redirect("/account/login");
     }
-      console.log("✅ Account Session Found:", accountData);
-      let accountview = await utilities.accountView();
+
       return res.render("account/accountview", {
         title: "Account View",
         nav,
-        accountview
+        accountData
     });
     } catch (error) {
       next(error); // ✅ Correctly pass errors to Express error handling
@@ -160,15 +159,15 @@ account.buildRegisterAccount = async function (req, res) {
   account.buildUpdateAccount = async function (req, res, next) {
     try {
         let nav = await utilities.getNav();
-        const accountId = req.params.accountId;
-        const accountData = await accountModel.getAccountById(accountId);
-
+        const account_id = req.params.accountId || req.session.accountData.account_id; // ✅ Use params first
+        const accountData = await accountModel.getAccountById(account_id);
+        console.log("✅ accountData in session:", req.session.accountData);
         if (!accountData) {
             req.flash("notice", "Account not found.");
             return res.redirect("/account/accountview");
         }
 
-        res.render("account/update", {
+        res.render("account/update-account", {
             title: "Update Account Information",
             nav,
             accountData,
@@ -181,33 +180,36 @@ account.buildRegisterAccount = async function (req, res) {
 
 account.processUpdateAccount = async function (req, res, next) {
   try {
-      const { account_id, account_firstname, account_lastname, account_email } = req.body;
+    const account_id = req.params.accountId || req.body.account_id;  // ✅ Use param first if available
+    const { account_firstname, account_lastname, account_email } = req.body;
 
-      let nav = await utilities.getNav();
-      const updateResult = await accountModel.updateAccountById(
-          account_id,
-          account_firstname,
-          account_lastname,
-          account_email
-      );
+    let nav = await utilities.getNav();
+    const updateResult = await accountModel.updateAccountById(
+      account_id,
+      account_firstname,
+      account_lastname,
+      account_email
+    );
 
-      if (updateResult) {
-          req.flash("notice", "Account information updated successfully.");
-          return res.redirect("/account/accountview");
-      } else {
-          req.flash("error", "Update failed. Please try again.");
-          return res.status(500).render("account/update", {
-              title: "Update Account Information",
-              nav,
-              accountData: { account_id, account_firstname, account_lastname, account_email },
-              errors: [],
-          });
-      }
+    if (updateResult) {
+      req.flash("notice", "Account information updated successfully.");
+      return res.redirect("/account/accountview");  // ✅ Ensures only ONE response is sent
+    } 
+
+    req.flash("error", "Update failed. Please try again.");
+    return res.status(500).render("account/update-account", {  // ✅ Use return to prevent duplicate responses
+      title: "Update Account Information",
+      nav,
+      accountData: { account_id, account_firstname, account_lastname, account_email },
+      errors: [],
+    });
+
   } catch (error) {
-      console.error("Error updating account:", error);
-      next(error);
+    console.error("Error updating account:", error);
+    next(error);  // ✅ Pass the error to Express error handler
   }
 };
+
 
 
 module.exports = account 

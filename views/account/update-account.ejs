@@ -1,3 +1,4 @@
+<div class="accountform-container">
 <h1>Update Account Information</h1>
 
 <form action="/account/update/<%= accountData.account_id %>" method="POST">
@@ -10,5 +11,6 @@
     <label for="account_email">Email:</label>
     <input type="email" name="account_email" value="<%= accountData.account_email %>" required>
 
-    <button type="submit">Update</button>
+    <button type="submit">Update Account</button>
 </form>
+</div>

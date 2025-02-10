@@ -82,9 +82,6 @@ app.use("/account", accountRoute)
 app.use("/inv", inventoryRoute)
 
 
-
-
-
 // Basic error handling
 app.post("/error-log", (req, res) => {
   console.error("Client-side error logged:", req.body);
