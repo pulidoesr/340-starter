@@ -11,11 +11,13 @@
     <%- messages() %>
   </div>
 <div id="accountview-box" class="accountview-box">
-  <% if (accountData) { %>
-    <h2>Welcome, <%= accountData.account_firstname %></h2>
-  <% } else { %>
-    <h2>Welcome, Guest</h2>
+  <% if (accountData.account_type === "Client") { %>
+    <h2>Client:  <%= accountData.account_firstname %></h2>
   <% } %>
+  <% if (accountData.account_type === "Employee" || accountData.account_type === "Admin") { %>
+    <h2>Welcome <%= accountData.account_firstname %> - <%= accountData.account_type %> </h2>
+    
+<% } %>  
 <!-- ✅ Update Account Information Link (Always Visible) -->
 <% if (accountData) { %>
   <a href="/account/update/<%= accountData.account_id %>">Edit Account Information</a>

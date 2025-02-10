@@ -58,4 +58,9 @@ async function updateAccountById (accountId, firstname, lastname, email) {
     }
   }
 
-module.exports = { checkExistingEmail, getAccountByEmail, updateAccountById, getAccountById };
+ // Update account password
+async function updatePassword (accountId, hashedPassword) {
+  await pool.query("UPDATE account SET password = $1 WHERE account_id = $2", [hashedPassword, accountId]);
+}; 
+
+module.exports = { checkExistingEmail, getAccountByEmail, updateAccountById, getAccountById, updatePassword };

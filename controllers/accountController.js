@@ -122,7 +122,7 @@ account.buildRegisterAccount = async function (req, res) {
 /* 
   login Management request
   */
-  account.accountView = async function (req, res, next) {
+  account.accountView = async function (req, res) {
     try {
       let nav = await utilities.getNav();
       const accountData = req.session.accountData;
@@ -156,7 +156,7 @@ account.buildRegisterAccount = async function (req, res) {
     });
   };
 
-  account.buildUpdateAccount = async function (req, res, next) {
+  account.buildUpdateAccount = async function (req, res) {
     try {
         let nav = await utilities.getNav();
         const account_id = req.params.accountId || req.session.accountData.account_id; // ✅ Use params first
@@ -167,7 +167,7 @@ account.buildRegisterAccount = async function (req, res) {
             return res.redirect("/account/accountview");
         }
 
-        res.render("account/update-account", {
+        return res.render("account/update-account", {
             title: "Update Account Information",
             nav,
             accountData,
@@ -178,7 +178,7 @@ account.buildRegisterAccount = async function (req, res) {
     }
 };
 
-account.processUpdateAccount = async function (req, res, next) {
+account.processUpdateAccount = async function (req, res) {
   try {
     const account_id = req.params.accountId || req.body.account_id;  // ✅ Use param first if available
     const { account_firstname, account_lastname, account_email } = req.body;
@@ -210,6 +210,74 @@ account.processUpdateAccount = async function (req, res, next) {
   }
 };
 
+account.renderChangePasswordForm = async function (req, res)  {
+  let nav = await utilities.getNav();
+  res.render("account/change-password", {
+    nav, 
+    accountData: req.session.accountData, 
+    title: "Change Password" });
+};
 
+account.updatePassword = async function (req, res)  {
+  const { current_password, new_password, confirm_password } = req.body;
+  const accountId = req.session.accountData.account_id;
+  let nav = await utilities.getNav();
+
+  try {
+ 
+      if (!accountId) {
+        return res.render("account/change-password", { 
+            accountData: req.session.accountData,
+            error: "Error: Account ID is missing.",
+            title: "Change Password",
+            nav 
+        });
+    }
+     // 1️⃣ Get the user's current hashed password from the database
+     const account = await accountModel.getAccountById(accountId);
+     if (!account || !account.account_password) {
+        return res.render("account/change-password", { 
+          accountData: req.session.accountData,
+          error: "Error: Account not found or password missing.",
+          title: "Change Password",
+          nav
+         });
+      }
+
+      // 2️⃣ Verify the current password
+      const isMatch = await bcrypt.compare(current_password, account.account_password);
+      if (!isMatch) {
+          return res.render("account/change-password", { 
+                accountData: req.session.accountData,
+                error: "Current password is incorrect.",
+                title: "Change Password",
+                nav
+            });
+      }
+
+      // 3️⃣ Check if new passwords match
+      if (new_password !== confirm_password) {
+        return res.render("account/change-password", { 
+          accountData: req.session.accountData,
+          error: "New passwords do not match.",
+          title: "Change Password",
+          nav
+      });
+      }
+
+      // 4️⃣ Hash the new password
+      const salt = await bcrypt.genSalt(10);
+      const hashedPassword = await bcrypt.hash(new_password, salt);
+
+      // 5️⃣ Update the password in the database
+      await accountModel.updatePassword(accountId, hashedPassword);
+
+      // 6️⃣ Redirect user to account page with a success message
+      return res.redirect("/account?message=Password updated successfully");
+  } catch (error) {
+      console.error(error);
+      res.status(500).send("Server error.");
+  }
+};
 
 module.exports = account 

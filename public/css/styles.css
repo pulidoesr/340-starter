@@ -798,7 +798,7 @@ input.invalid, textarea.invalid, select.invalid {
 }
 
 /* 📄 Centered Form Container */
-.accountform-container {
+.accountform-container, .password-form-container {
   background-color: white; /* White Background */
   padding: 30px;
   border-radius: 15px;

@@ -47,12 +47,14 @@ router.get("/logout", (req, res) => {
 router.get("/update/:accountId", 
   checkAuth,
   utilities.handleErrors(accountController.buildUpdateAccount));
+router.get("/change-password", accountController.renderChangePasswordForm);
 
 // ✅ Process Account Update Route
 router.post("/update/:accountId", 
   checkAuth, 
   utilities.handleErrors(accountController.processUpdateAccount)
 );
+router.post("/change-password", accountController.updatePassword);
 
 
 module.exports = router;
