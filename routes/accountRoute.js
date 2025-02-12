@@ -36,7 +36,7 @@ router.post("/register",
   regValidate.checkRegData, 
   utilities.handleErrors(accountController.buildRegisterAccount))
 
-// Lougout Control
+// Logout Control
 router.get("/logout", (req, res) => {
   req.session.destroy(() => {
     res.redirect("/");
@@ -47,6 +47,7 @@ router.get("/logout", (req, res) => {
 router.get("/update/:accountId", 
   checkAuth,
   utilities.handleErrors(accountController.buildUpdateAccount));
+
 router.get("/change-password", accountController.renderChangePasswordForm);
 
 // ✅ Process Account Update Route
@@ -54,7 +55,15 @@ router.post("/update/:accountId",
   checkAuth, 
   utilities.handleErrors(accountController.processUpdateAccount)
 );
+
 router.post("/change-password", accountController.updatePassword);
+
+console.log("✅ accountRoute.js is loaded.");
+router.stack.forEach((r) => {
+    if (r.route) {
+        console.log("✅ Account Route Registered:", r.route.path);
+    }
+});
 
 
 module.exports = router;

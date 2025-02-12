@@ -5,16 +5,12 @@ const inventoryController = require("../controllers/inventoryController")
 const utilities = require("../utilities")
 const regValidate = require("../utilities/classification-validation")
 const invValidate= require("../utilities/inventory-validation")
-const checkAuth = require("../utilities/checkAuth");
+
 
 // Process routes (MVC approach)
 router.get("/add-classification",
    utilities.checkAdminAuth,
    inventoryController.addClassification);
-router.get("/add-vehicle",
-   checkAuth,
-   inventoryController.addInventory);
-
 
 router.post(
   "/add-classification",

@@ -2,16 +2,13 @@ const jwt = require("jsonwebtoken");
 
 function checkAuth(req, res, next) {
     try {
+        console.log("🔍 Checking Auth for:", req.originalUrl);
         if (!req.session.accountData) {
             console.log("❌ No session found in checkAuth.");
             req.flash("notice", "You must be logged in to access this page.");
             return res.redirect("/account/login"); // ✅ Stops execution
         }
-        if (!req.session || !req.session.accountData) {
-           req.flash("notice", "You must be logged in to access the account page.");
-           return res.redirect("/account/login");
-        }
-    next();
+
         // Get the JWT from cookies
         const token = req.cookies.jwt;
         if (!token) {
@@ -34,7 +31,7 @@ function checkAuth(req, res, next) {
         // Check if user is authorized (Only 'Employee' or 'Admin' allowed)
         if (decoded.account_type !== "Employee" && decoded.account_type !== "Admin") {
             req.flash("notice", "Unauthorized access.");
-            return res.redirect("/account/login");
+            return res.redirect("/account/accountview");
         }
 
         // Store user data in request

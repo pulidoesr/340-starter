@@ -72,8 +72,7 @@ app.set("layout", "./layouts/layout") // not a views root
  * Routes
  *************************/
 app.use(static)
-// Index route
-app.get("/", utilities.handleErrors(baseController.buildHome)) 
+
 
 // Account routes
 app.use("/account", accountRoute)
@@ -81,6 +80,8 @@ app.use("/account", accountRoute)
 // Inventory Management route
 app.use("/inv", inventoryRoute)
 
+// Index route
+app.get("/", utilities.handleErrors(baseController.buildHome)) 
 
 // Basic error handling
 app.post("/error-log", (req, res) => {
@@ -128,4 +129,5 @@ app.all("*", (req, res) => {
   console.log("Unhandled route:", req.method, req.url);
   res.status(404).send("Route not found.");
 });
+
 

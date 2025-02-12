@@ -122,25 +122,30 @@ account.buildRegisterAccount = async function (req, res) {
 /* 
   login Management request
   */
-  account.accountView = async function (req, res) {
+  account.accountView = async function (req, res, next) { // ✅ Added `next`
     try {
-      let nav = await utilities.getNav();
-      const accountData = req.session.accountData;
-      if (!accountData) {
-        console.log("❌ No session data found.");
-        req.flash("notice", "You must be logged in to access the account page.");
-        return res.redirect("/account/login");
-    }
+        let nav = await utilities.getNav();
+        const accountData = req.session.accountData;
+        
+        if (!accountData) {
+            console.log("❌ No session data found.");
+            req.flash("notice", "You must be logged in to access the account page.");
+            return res.redirect("/account/login");
+        }
 
-      return res.render("account/accountview", {
-        title: "Account View",
-        nav,
-        accountData
-    });
+            res.render("account/accountview", {
+            title: "Account View",
+            nav,
+            accountData
+        });
+
     } catch (error) {
-      next(error); // ✅ Correctly pass errors to Express error handling
+        console.error("❌ Error in accountView:", error); // ✅ Added logging
+        if (!res.headersSent) { // ✅ Prevent sending headers twice
+            return next(error);
+        }
     }
-  };
+};
 
   /* 
     Account Logout
@@ -164,10 +169,10 @@ account.buildRegisterAccount = async function (req, res) {
         console.log("✅ accountData in session:", req.session.accountData);
         if (!accountData) {
             req.flash("notice", "Account not found.");
-            return res.redirect("/account/accountview");
+            return res.redirect("account/accountview");
         }
 
-        return res.render("account/update-account", {
+            res.render("account/update-account", {
             title: "Update Account Information",
             nav,
             accountData,
@@ -178,11 +183,10 @@ account.buildRegisterAccount = async function (req, res) {
     }
 };
 
-account.processUpdateAccount = async function (req, res) {
+account.processUpdateAccount = async function (req, res, next) {
   try {
     const account_id = req.params.accountId || req.body.account_id;  // ✅ Use param first if available
     const { account_firstname, account_lastname, account_email } = req.body;
-
     let nav = await utilities.getNav();
     const updateResult = await accountModel.updateAccountById(
       account_id,
@@ -193,21 +197,25 @@ account.processUpdateAccount = async function (req, res) {
 
     if (updateResult) {
       req.flash("notice", "Account information updated successfully.");
-      return res.redirect("/account/accountview");  // ✅ Ensures only ONE response is sent
-    } 
-
+      return res.redirect("/account/accountview"); // ✅ Stops execution
+    }
+    
+    // If update fails, send an error response
     req.flash("error", "Update failed. Please try again.");
-    return res.status(500).render("account/update-account", {  // ✅ Use return to prevent duplicate responses
+    return res.status(500).render("account/update-account", {  
       title: "Update Account Information",
       nav,
       accountData: { account_id, account_firstname, account_lastname, account_email },
       errors: [],
     });
-
   } catch (error) {
-    console.error("Error updating account:", error);
-    next(error);  // ✅ Pass the error to Express error handler
+    console.error("❌ Error updating account:", error);
+     // ✅ Prevents multiple responses
+     if (!res.headersSent) {  
+      return next(error);
+    }
   }
+    
 };
 
 account.renderChangePasswordForm = async function (req, res)  {
