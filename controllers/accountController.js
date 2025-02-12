@@ -89,16 +89,16 @@ account.buildRegisterAccount = async function (req, res) {
       let nav = await utilities.getNav();
       const { account_email, account_password } = req.body;
       const accountData = await accountModel.getAccountByEmail(account_email);
-  
+      const loginPage = await utilities.buildLoginPage()
       if (!accountData) {
         req.flash("notice", "Invalid email or password.");
-        return res.status(400).render("account/login", { title: "Login", nav, errors: null, account_email });
+        return res.status(400).render("account/login", { title: "Login", nav, errors: null, account_email, loginPage });
       }
   
       const isPasswordValid = await bcrypt.compare(account_password, accountData.account_password);
       if (!isPasswordValid) {
         req.flash("notice", "Invalid email or password.");
-        return res.status(400).render("account/login", { title: "Login", nav, errors: null, account_email });
+        return res.status(400).render("account/login", { title: "Login", nav, errors: null, account_email, loginPage });
       }
   
       delete accountData.account_password; // Remove password before sending user data
@@ -234,6 +234,7 @@ account.updatePassword = async function (req, res)  {
   try {
  
       if (!accountId) {
+        req.flash("error", "Error: Account ID is missing.");
         return res.render("account/change-password", { 
             accountData: req.session.accountData,
             error: "Error: Account ID is missing.",
@@ -244,6 +245,7 @@ account.updatePassword = async function (req, res)  {
      // 1️⃣ Get the user's current hashed password from the database
      const account = await accountModel.getAccountById(accountId);
      if (!account || !account.account_password) {
+        req.flash("error", "Error: Account not found or password missing");
         return res.render("account/change-password", { 
           accountData: req.session.accountData,
           error: "Error: Account not found or password missing.",
@@ -255,6 +257,7 @@ account.updatePassword = async function (req, res)  {
       // 2️⃣ Verify the current password
       const isMatch = await bcrypt.compare(current_password, account.account_password);
       if (!isMatch) {
+          req.flash("error", "Current password is incorrect.");
           return res.render("account/change-password", { 
                 accountData: req.session.accountData,
                 error: "Current password is incorrect.",
@@ -265,6 +268,7 @@ account.updatePassword = async function (req, res)  {
 
       // 3️⃣ Check if new passwords match
       if (new_password !== confirm_password) {
+        req.flash("success", "Password do not match.");
         return res.render("account/change-password", { 
           accountData: req.session.accountData,
           error: "New passwords do not match.",
@@ -281,7 +285,8 @@ account.updatePassword = async function (req, res)  {
       await accountModel.updatePassword(accountId, hashedPassword);
 
       // 6️⃣ Redirect user to account page with a success message
-      return res.redirect("/account?message=Password updated successfully");
+      req.flash("success", "Password updated successfully.");
+      return res.redirect("/account/accountview");
   } catch (error) {
       console.error(error);
       res.status(500).send("Server error.");
