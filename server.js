@@ -13,13 +13,13 @@ const path = require("path");
 const static = require("./routes/static")
 const baseController = require("./controllers/baseController")
 const inventoryRoute = require("./routes/inventoryRoute")
+const saleRoute = require("./routes/saleRoute")
 const utilities = require("./utilities/")
 const session = require("express-session")
 const pool = require('./database/')
 const accountRoute = require("./routes/accountRoute")
 const bodyParser = require("body-parser")
 const cookieParser = require("cookie-parser")
-
 
 
 /* ***********************
@@ -80,6 +80,9 @@ app.use("/account", accountRoute)
 // Inventory Management route
 app.use("/inv", inventoryRoute)
 
+// Sale route
+app.use("/sale", saleRoute);
+
 // Index route
 app.get("/", utilities.handleErrors(baseController.buildHome)) 
 
@@ -129,5 +132,8 @@ app.all("*", (req, res) => {
   console.log("Unhandled route:", req.method, req.url);
   res.status(404).send("Route not found.");
 });
+
+
+
 
 

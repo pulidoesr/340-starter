@@ -58,12 +58,4 @@ router.post("/update/:accountId",
 
 router.post("/change-password", accountController.updatePassword);
 
-console.log("✅ accountRoute.js is loaded.");
-router.stack.forEach((r) => {
-    if (r.route) {
-        console.log("✅ Account Route Registered:", r.route.path);
-    }
-});
-
-
 module.exports = router;

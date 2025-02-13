@@ -1,0 +1,44 @@
+<div id="salecar-container" class="salecar-container">
+
+
+<body>
+<h1>Sale Page</h1>
+    <!-- ✅ Display Flash Messages -->
+    <div id="flash-message" class="flash-message">
+        <%- messages() %>
+      </div>
+<label>Client:</label>
+<select id="client">
+    <% clients.forEach(client => { %>
+        <option value="<%= client.id %>"><%= client.name %></option>
+    <% }) %>
+</select>
+
+<label>Classification:</label>
+<select id="classification" onchange="fetchCars()">
+    <% classifications.forEach(classification => { %>
+        <option value="<%= classification.id %>"><%= classification.name %></option>
+    <% }) %>
+</select>
+
+<label>Car:</label>
+<select id="car" onchange="updateCarDetails()"></select>
+
+<img id="carImage" src="" alt="Car Image" width="200">
+
+<label>Price:</label> <input id="price" readonly>
+<label>Miles:</label> <input id="miles" readonly>
+<label>Color:</label> <input id="color" readonly>
+
+<label>Tax Rate (%):</label> <input id="taxRate" oninput="calculateTotal()">
+<label>Tax Amount:</label> <input id="taxAmount" readonly>
+<label>Total Price:</label> <input id="totalPrice" readonly>
+
+<div class="button-group">
+<button onclick="processSale()">Invoice</button>
+<button onclick="window.location.reload()">Cancel</button>
+<button onclick="window.location.href='/account/accountview'">Exit</button>
+</div>
+</body>
+</div>
+<script src="../../js/sale.js"></script>

@@ -854,3 +854,80 @@ input.invalid, textarea.invalid, select.invalid {
 .accountform-container button:hover {
   background-color: #0056b3;
 }
+
+/* Style the sale container */
+.salecar-container {
+  background-color: white; /* White Background */
+  padding: 30px;
+  border-radius: 15px;
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+  width: 90%;
+  max-width: 600px;
+  text-align: center;
+  margin: 20px auto;
+}
+
+/* Center the flash message inside the container */
+.salecar-container .flash-message {
+  color: red;
+  font-weight: bold;
+  background: #ffe5e5;
+  padding: 10px;
+  border: 1px solid red;
+  border-radius: 5px;
+  margin-bottom: 15px;
+}
+
+/* Style form elements for better spacing */
+.salecar-container label {
+  display: block; /* Ensures label is on a new line */
+  text-align: left; /* Align text to the left */
+  font-weight: bold;
+  margin-top: 10px;
+  margin-bottom: 5px;
+}
+
+.salecar-container select, input {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 16px;
+}
+
+.salecar-container button {
+  margin-top: 15px;
+  padding: 10px 15px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.salecar-container button:hover {
+  opacity: 0.8;
+}
+
+/* Button Container */
+.salecar-container .button-group {
+  display: flex; /* Aligns buttons in a row */
+  justify-content: center; /* Centers the buttons */
+  gap: 10px; /* Adds spacing between buttons */
+  margin-top: 10px;
+}
+
+/* Style for buttons */
+.salecar-container button {
+  padding: 8px 12px; /* Reduce button size */
+  font-size: 14px; /* Reduce text size */
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  min-width: 80px; /* Ensures uniform button width */
+}
+
+/* Different button colors */
+#invoiceBtn { background: green; color: white; }
+#cancelBtn { background: red; color: white; }
+#exitBtn { background: gray; color: white; }

@@ -103,7 +103,6 @@ account.buildRegisterAccount = async function (req, res) {
   
       delete accountData.account_password; // Remove password before sending user data
       req.session.accountData = accountData;
-      console.log("✅ Session Data Set:", req.session.accountData); 
       const accessToken = jwt.sign(accountData, process.env.ACCESS_TOKEN_SECRET, { expiresIn: 3600 * 1000 });
   
       res.cookie("jwt", accessToken, { httpOnly: true, maxAge: 3600 * 1000 });
@@ -166,7 +165,6 @@ account.buildRegisterAccount = async function (req, res) {
         let nav = await utilities.getNav();
         const account_id = req.params.accountId || req.session.accountData.account_id; // ✅ Use params first
         const accountData = await accountModel.getAccountById(account_id);
-        console.log("✅ accountData in session:", req.session.accountData);
         if (!accountData) {
             req.flash("notice", "Account not found.");
             return res.redirect("account/accountview");
