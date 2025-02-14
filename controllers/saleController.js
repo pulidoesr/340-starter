@@ -15,7 +15,16 @@ exports.getSalePage = async (req, res) => {
         const clients = await saleModel.getClients();
         const classifications = await saleModel.getClassifications();
         let nav = await utilities.getNav()
-        res.render("sale/sale-car", { clients, classifications, cars: [], selectedCar: null, title: "Car Sale", nav });
+        res.render("sale/sale-car", {
+            nav, 
+            title: "Car Sale", 
+            clients, 
+            classifications, 
+            cars: [], 
+            selectedClient: "",
+            selectedClassification: "",
+            selectedCar: null,       
+          });
     } catch (error) {
         console.error(error);
         res.status(500).send("Server Error");
@@ -23,15 +32,28 @@ exports.getSalePage = async (req, res) => {
 };
 
 exports.getCarsByClassification = async (req, res) => {
-    const { classificationId } = req.params;
     try {
+        console.log("Received request for classification ID:", req.params.classificationId); // ✅ Debugging log
+
+        const classificationId = req.params.classificationId;
+        if (!classificationId || classificationId === "undefined") {
+            return res.status(400).json({ error: "Classification ID is required." });
+        }
+
+        // ✅ Ensure `getAvailableCars()` properly handles errors
         const cars = await saleModel.getAvailableCars(classificationId);
-        res.json(cars);
+
+        // ✅ Prevent sending multiple responses
+        return res.json(cars);
+
     } catch (error) {
-        console.error(error);
-        res.status(500).send("Server Error");
+        console.error("Error fetching available cars:", error);
+        if (!res.headersSent) {
+            return res.status(500).json({ error: "Error fetching cars" });
+        }
     }
 };
+
 
 exports.processSale = async (req, res) => {
     const { carId, clientId, taxRate, totalPrice } = req.body;

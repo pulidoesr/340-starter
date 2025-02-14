@@ -123,7 +123,7 @@ invMgm.processClassification = async (req, res) => {
         }
 
         // ✅ Properly await the database insertion
-        const regResult = await classificationModel.registerNewClassification(classification_name);
+        const regResult = await classificationModel.registerNew(classification_name);
         
         if (regResult) {
             req.session.flashMessage = "Classification successfully added!";

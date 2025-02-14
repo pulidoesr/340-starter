@@ -1,28 +1,43 @@
 <div id="salecar-container" class="salecar-container">
+    <% if (title) { %>
+        <h1><%= title %></h1>
+      <% } %>
 
-
-<body>
-<h1>Sale Page</h1>
     <!-- ✅ Display Flash Messages -->
     <div id="flash-message" class="flash-message">
         <%- messages() %>
       </div>
-<label>Client:</label>
-<select id="client">
-    <% clients.forEach(client => { %>
-        <option value="<%= client.id %>"><%= client.name %></option>
-    <% }) %>
-</select>
+ 
+      <label for="client">Client:</label>
+      <select id="client" name="client">
+        <option value="">Select a Client</option>
+        <% clients.forEach(client => { %>
+            <option value="<%= client.account_id %>" <%= client.account_id == selectedClient ? "selected" : "" %>>
+                <%= client.account_firstname + " " + client.account_lastname %>
+            </option>
+        <% }) %>
+    </select>
+    <label for="classification">Classification:</label>
+    <select id="classification" name="classification" onchange="fetchCars()">
+        <option value="">Select a Classification</option>
+        <% classifications.forEach(classification => { %>
+            <option value="<%= classification.classification_id %>" 
+                <%= classification.classification_id == selectedClassification ? "selected" : "" %>>
+                <%= classification.classification_name %>
+            </option>
+        <% }) %>
+      </select>
+      <label for="carclassification">Car by Classification:</label>
+      <select id="car" onchange="updateCarDetails()"></select>
+        <option value="">Car selection</option>
+        <% cars.forEach(cars => { %>
+            <option value="<%= classification.classification_id %>" 
+                <%= classification.classification_id == selectedClassification ? "selected" : "" %>>
+                <%= classification.classification_name %>
+            </option>
+        <% }) %>
+      </select>
 
-<label>Classification:</label>
-<select id="classification" onchange="fetchCars()">
-    <% classifications.forEach(classification => { %>
-        <option value="<%= classification.id %>"><%= classification.name %></option>
-    <% }) %>
-</select>
-
-<label>Car:</label>
-<select id="car" onchange="updateCarDetails()"></select>
 
 <img id="carImage" src="" alt="Car Image" width="200">
 
@@ -39,6 +54,5 @@
 <button onclick="window.location.reload()">Cancel</button>
 <button onclick="window.location.href='/account/accountview'">Exit</button>
 </div>
-</body>
 </div>
 <script src="../../js/sale.js"></script>

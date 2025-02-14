@@ -49,3 +49,4 @@ async function processSale() {
   alert(result.message);
   if (result.success) window.location.reload();
 }
+
