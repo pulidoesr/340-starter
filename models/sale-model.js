@@ -33,17 +33,43 @@ exports.getCarById = async (carId) => {
   }
 };
 // Process the sale (update inventory and invoice tables)
-exports.processSale = async (invoice_id, invoice_number, invoice_account_id, invoice_date, invoice_inv_id, invoice_price, invoice_tax_rate, invoice_tax_amount, inovoice_discount, invoice_total) => {
-  const invoiceQuery = `
-      INSERT INTO invoice (invoice_id, invoice_number, invoice_account_id, invoice_date, invoice_inv_id, invoice_price, invoice_tax_rate, invoice_tax_amount, inovoice_discount, invoice_total)
-      VALUES ($1, $2, $3, NOW(), $4, $5, $6, $7, $8, $9, $10) RETURNING invoice_id;
-  `;
-  const { rows } = await pool.query(invoiceQuery, [invoice_id, invoice_number, invoice_account_id, invoice_date, invoice_inv_id, invoice_price, invoice_tax_rate, invoice_tax_amount, inovoice_discount, invoice_total]);
-  
-  const invoiceId = rows[0].invoice_id;
+exports.processSale = async (carId, clientId, carPrice, discount, taxRate, taxAmount, totalPrice) => {
+  try {
+    // Fetch the current document_number
+    const documentRead = `SELECT document_number FROM document WHERE document_id = 1`;
+    const { rows: documentRows } = await pool.query(documentRead);
 
-  // Update inventory with invoice reference
-  await pool.query("UPDATE inventory SET invoice_id = $1 WHERE inv_id = $2", [invoice_id, inv_id]);
+    if (documentRows.length === 0) {
+      throw new Error("Document record not found");
+    }
 
-  return invoiceId;
+    const document_number = documentRows[0].document_number + 1; // Increment invoice number
+
+    const invoiceQuery = `
+    INSERT INTO invoice (invoice_number, invoice_account_id, invoice_date, invoice_inv_id, 
+                         invoice_price, invoice_tax_rate, invoice_tax_amount, 
+                         invoice_discount, invoice_total)
+    VALUES ($1, $2, NOW(), $3, $4, $5, $6, $7, $8) RETURNING invoice_id;
+`;
+
+    const { rows: invoiceRows } = await pool.query(invoiceQuery, [
+      document_number, clientId, carId, carPrice, taxRate, taxAmount, discount, totalPrice
+]);
+    if (invoiceRows.length === 0) {
+      throw new Error("Invoice creation failed");
+    }
+
+    const invoiceId = invoiceRows[0].invoice_id;
+
+    // Update inventory with invoice reference
+    await pool.query("UPDATE inventory SET invoice_id = $1 WHERE inv_id = $2", [invoiceId, carId]);
+
+    // Update document with last invoice
+    await pool.query("UPDATE document SET document_number = $1 WHERE document_id = $2", [document_number, 1]);
+
+    return invoiceId;
+  } catch (error) {
+    console.error("Error processing sale:", error);
+    throw error;
+  }
 };

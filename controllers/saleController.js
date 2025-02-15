@@ -78,15 +78,40 @@ exports.getCarDetails = async (req, res) => {
 };
 
 exports.processSale = async (req, res) => {
-    const { carId, clientId, taxRate, totalPrice } = req.body;
-    const employeeId = req.session.user.id;
-
     try {
-        await saleModel.processSale(carId, clientId, taxRate, totalPrice, employeeId);
-        res.json({ success: true, message: "Invoice processed successfully!" });
+        console.log("Received sale request:", req.body); // ✅ Debugging log
+         // ✅ Retrieve employeeId from session
+         const accountData = req.session.accountData;
+         const employeeId = accountData?.account_id; // ✅ Get logged-in user ID
+         if (!employeeId) {
+            console.error("❌ Error: Employee ID is missing in session.");
+            return res.status(403).json({ error: "Unauthorized: Employee ID not found." });
+        }
+
+        const { carId, clientId, carPrice, discount, taxRate, taxAmount, totalPrice} = req.body;
+
+        if (!carId || !clientId || !carPrice || !taxRate || !taxAmount || !totalPrice) {
+            console.error("❌ Missing required fields:", req.body);
+            return res.status(400).json({ error: "Missing required fields in request." });
+        }
+
+        const invoiceId = await saleModel.processSale(carId, clientId, carPrice, discount, taxRate, taxAmount, totalPrice, employeeId);
+           // ✅ Store flash message in session before redirecting
+           req.session.flashMessage = { 
+            type: "success", 
+            message: `✅ Sale processed successfully! Invoice #${invoiceId} has been created.`
+    } 
+        // ✅ Return JSON instead of redirecting
+         return res.json({ success: true, invoiceId, redirectUrl: "/account/accountview" });
     } catch (error) {
-        console.error(error);
-        res.status(500).json({ success: false, message: "Error processing invoice" });
+        console.error("❌ Error processing sale:", error);
+
+        req.session.flashMessage = { 
+            type: "error", 
+            message: "Error processing sale. Please try again."
+        };
+
+        return res.redirect("/sale");  // ✅ Redirects back to sale page with error message
     }
 };
 

@@ -44,14 +44,14 @@
 <label>Price:</label> <input id="inv_price" readonly>
 <label>Miles:</label> <input id="inv_miles" readonly>
 <label>Color:</label> <input id="inv_color" readonly>
-
+<label>Discount:</label> <input id="invoice_discount" oninput="validateDiscount()">
 <label>Tax Rate (%):</label> <input id="invoice_tax_rate" oninput="calculateTotal()">
 <label>Tax Amount:</label> <input id="invoice_tax_amount" readonly>
 <label>Total Price:</label> <input id="invoice_total" readonly>
 
 <div class="button-group">
-<button onclick="processSale()">Invoice</button>
-<button onclick="window.location.reload()">Cancel</button>
+<button onclick="processSale()"> Create Invoice</button>
+<button onclick="window.location.reload()">Start Over</button>
 <button onclick="window.location.href='/account/accountview'">Exit</button>
 </div>
 </div>
