@@ -9,13 +9,8 @@ router.get("/",
     utilities.checkAdminAuth,
     utilities.handleErrors(saleController.getSalePage));
 router.get("/cars/:classificationId", utilities.handleErrors(saleController.getCarsByClassification));
-router.post("/process-sale", utilities.handleErrors(saleController.processSale));
+router.get("/car-details/:carId", saleController.getCarDetails);
 
-console.log("✅ saleRoute.js is loaded.");
-router.stack.forEach((r) => {
-    if (r.route) {
-        console.log("✅ Sale Route Registered:", r.route.path);
-    }
-});
+router.post("/process-sale", utilities.handleErrors(saleController.processSale));
 
 module.exports = router;

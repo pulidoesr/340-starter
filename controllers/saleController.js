@@ -54,6 +54,28 @@ exports.getCarsByClassification = async (req, res) => {
     }
 };
 
+exports.getCarDetails = async (req, res) => {
+    try {
+        const carId = req.params.carId;
+        if (!carId || carId === "undefined") {
+            return res.status(400).json({ error: "Car ID is required." });
+        }
+
+        const car = await saleModel.getCarById(carId);
+
+        if (!car) {
+            return res.status(404).json({ error: "Car not found." });
+        }
+        console.log("Car details controller:", car)
+        return res.json(car); // ✅ Ensure JSON response
+
+    } catch (error) {
+        console.error("Error fetching car details:", error);
+        if (!res.headersSent) {
+            return res.status(500).json({ error: "Error fetching car details." });
+        }
+    }
+};
 
 exports.processSale = async (req, res) => {
     const { carId, clientId, taxRate, totalPrice } = req.body;

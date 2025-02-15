@@ -21,6 +21,17 @@ exports.getAvailableCars = async (classification_id) => {
   return rows;
 };
 
+// Fetch selected car 
+exports.getCarById = async (carId) => {
+  try {
+      const query = `SELECT inv_id, inv_make, inv_model, inv_year, inv_image, inv_price::FLOAT AS inv_price, inv_miles ::FLOAT AS inv_miles, inv_color, invoice_id FROM inventory WHERE inv_id = $1`;
+      const result = await pool.query(query, [carId]);
+      return result.rows[0] || null; // ✅ Return first row or null
+  } catch (error) {
+      console.error("Database error in getCarById:", error);
+      throw error;
+  }
+};
 // Process the sale (update inventory and invoice tables)
 exports.processSale = async (invoice_id, invoice_number, invoice_account_id, invoice_date, invoice_inv_id, invoice_price, invoice_tax_rate, invoice_tax_amount, inovoice_discount, invoice_total) => {
   const invoiceQuery = `
